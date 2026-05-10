@@ -24,6 +24,41 @@ Replaces vanilla death messages with configurable narrative variants using MiniM
 
 Drop `betterdeathmessages-1.0.0.jar` into `plugins/` and restart.
 
+## Commands & Permissions
+
+| Command | Description | Permission | Default |
+|---|---|---|---|
+| `/deaths [player]` | View death stats | `bdm.stats` | true |
+| `/bdm reload` | Reload messages.yml | `bdm.admin` | op |
+
+## Configuration
+
+```yaml
+# messages.yml (excerpt)
+pvp:
+  - "<red>{victim}</red> was slain by <gold>{killer}</gold> using <white>{weapon}</white>."
+  - "<gray>{victim}'s head rolled thanks to {killer}."
+
+fall:
+  - "<yellow>{victim} forgot that gravity is not optional."
+  - "<gray>{victim} tried to fly. It didn't work."
+
+# config.yml
+notable-kills:
+  broadcast: true
+  causes: [PVP, ENDER_DRAGON, WITHER]
+first-death-broadcast: true
+```
+
+## PlaceholderAPI
+
+| Placeholder | Value |
+|---|---|
+| `%bdm_deaths_total%` | Total deaths |
+| `%bdm_kills%` | Total kills |
+| `%bdm_kdr%` | Kill/death ratio |
+| `%bdm_killstreak%` | Current killstreak |
+
 ## Documentation
 
 - [CONFIG.md](docs/CONFIG.md)
