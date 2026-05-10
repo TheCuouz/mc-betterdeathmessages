@@ -1,0 +1,25 @@
+name: BetterDeathMessages
+version: "${project.version}"
+main: com.cristian.betterdeathmessages.BetterDeathMessagesPlugin
+api-version: "1.21"
+description: "Narrative death messages with hover stats and global broadcasts"
+authors: [Cristian]
+softdepend: [PlaceholderAPI]
+
+commands:
+  deaths:
+    description: "Show death statistics"
+    usage: "/deaths [player]"
+    permission: bdm.use
+  bdm:
+    description: "BetterDeathMessages admin"
+    usage: "/bdm reload"
+    permission: bdm.admin
+
+permissions:
+  bdm.use:
+    description: "Use /deaths"
+    default: true
+  bdm.admin:
+    description: "Reload config"
+    default: op
