@@ -1,7 +1,8 @@
 package com.cristian.betterdeathmessages.command;
 
 import com.cristian.betterdeathmessages.BetterDeathMessagesPlugin;
-import net.kyori.adventure.text.minimessage.MiniMessage;
+import com.ttsstudio.sdk.PluginIdentity;
+import com.ttsstudio.sdk.chat.ChatPrefix;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -9,26 +10,27 @@ import org.jetbrains.annotations.NotNull;
 
 public class BdmCommand implements CommandExecutor {
 
-    private static final MiniMessage MM = MiniMessage.miniMessage();
     private final BetterDeathMessagesPlugin plugin;
+    private final PluginIdentity identity;
 
     public BdmCommand(BetterDeathMessagesPlugin plugin) {
         this.plugin = plugin;
+        this.identity = PluginIdentity.of(plugin);
     }
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command,
                              @NotNull String label, @NotNull String[] args) {
         if (!sender.hasPermission("bdm.admin")) {
-            sender.sendMessage(MM.deserialize("<red>No tienes permiso.</red>"));
+            ChatPrefix.error(sender, identity, "No tienes permiso.");
             return true;
         }
         if (args.length >= 1 && args[0].equalsIgnoreCase("reload")) {
             plugin.reload();
-            sender.sendMessage(MM.deserialize("<green>BetterDeathMessages recargado.</green>"));
+            ChatPrefix.success(sender, identity, "BetterDeathMessages recargado.");
             return true;
         }
-        sender.sendMessage(MM.deserialize("<yellow>Uso: /bdm reload</yellow>"));
+        ChatPrefix.warn(sender, identity, "Uso: /bdm reload");
         return true;
     }
 }
