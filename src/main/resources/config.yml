@@ -42,3 +42,21 @@ global-broadcast:
 # The message template lives in lang/<locale>.yml under first-death-of-day.message.
 first-death-of-day:
   enabled: true
+
+# ============================================================
+# KILL STREAKS
+# ============================================================
+# Broadcast when a player reaches a kill streak milestone.
+# Thresholds: list of consecutive kills that trigger a broadcast.
+# Message templates in lang/<locale>.yml under kill-streak.<n>.
+kill-streaks:
+  enabled: true
+  thresholds: [3, 5, 10, 20]
+
+# ============================================================
+# FIRST BLOOD
+# ============================================================
+# Broadcast when the first PvP kill of the day happens.
+# Message template in lang/<locale>.yml under first-blood.message.
+first-blood:
+  enabled: true
