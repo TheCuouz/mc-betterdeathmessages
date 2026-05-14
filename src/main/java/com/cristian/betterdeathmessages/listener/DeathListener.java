@@ -58,6 +58,12 @@ public class DeathListener implements Listener {
             ? lastDmg.getCause()
             : EntityDamageEvent.DamageCause.CUSTOM;
 
+        String dimension = switch (victim.getWorld().getEnvironment()) {
+            case NETHER   -> "nether";
+            case THE_END  -> "the_end";
+            default       -> "overworld";
+        };
+
         DeathContext ctx = new DeathContext(
             victim,
             playerKiller,
@@ -66,7 +72,8 @@ public class DeathListener implements Listener {
             weapon,
             victim.getFallDistance(),
             victim.getWorld().getBiome(victim.getLocation()).getKey().getKey(),
-            victim.getLocation()
+            victim.getLocation(),
+            dimension
         );
 
         String category = DeathCategoryResolver.resolve(
