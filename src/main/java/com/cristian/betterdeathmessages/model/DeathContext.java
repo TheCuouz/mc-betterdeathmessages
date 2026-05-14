@@ -15,5 +15,6 @@ public record DeathContext(
     @Nullable ItemStack weapon,
     double fallDistance,
     String biome,
-    Location deathLocation
+    Location deathLocation,
+    String dimension   // "overworld", "nether", "the_end"
 ) {}
