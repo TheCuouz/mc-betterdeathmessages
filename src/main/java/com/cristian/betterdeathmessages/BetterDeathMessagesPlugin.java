@@ -3,6 +3,8 @@ package com.cristian.betterdeathmessages;
 import com.cristian.betterdeathmessages.command.BdmCommand;
 import com.cristian.betterdeathmessages.command.DeathsCommand;
 import com.cristian.betterdeathmessages.integration.PapiHook;
+import com.cristian.betterdeathmessages.lastwords.LastWordsCache;
+import com.cristian.betterdeathmessages.listener.ChatCaptureListener;
 import com.cristian.betterdeathmessages.listener.DeathListener;
 import com.cristian.betterdeathmessages.message.MessagePicker;
 import com.cristian.betterdeathmessages.service.DeathStatsService;
@@ -24,6 +26,7 @@ public final class BetterDeathMessagesPlugin extends JavaPlugin {
     private MessagePicker messagePicker;
     private FirstDeathTracker firstDeathTracker;
     private FileConfiguration messagesConfig;
+    private LastWordsCache lastWordsCache;
 
     @Override
     public void onEnable() {
@@ -39,7 +42,22 @@ public final class BetterDeathMessagesPlugin extends JavaPlugin {
 
         firstDeathTracker = new FirstDeathTracker();
 
+        // Last Words cache + capture listener (privacy-first, public chat only).
+        long cacheSeconds = Math.max(1L, getConfig().getLong("last-words.cache-seconds", 60L));
+        lastWordsCache = new LastWordsCache(cacheSeconds * 1000L);
+        boolean lastWordsEnabled = getConfig().getBoolean("last-words.enabled", true);
+
+        // MessagePicker is rebuilt here so it has the cache + plugin config.
+        messagePicker = new MessagePicker(messagesConfig, getConfig(), lastWordsCache);
+
         getServer().getPluginManager().registerEvents(new DeathListener(this), this);
+        if (lastWordsEnabled) {
+            getServer().getPluginManager()
+                .registerEvents(new ChatCaptureListener(lastWordsCache), this);
+            // Periodic janitor: drop expired entries every minute.
+            getServer().getScheduler().runTaskTimer(
+                this, lastWordsCache::purgeExpired, 20L * 60L, 20L * 60L);
+        }
 
         var deathsCmd = getCommand("deaths");
         if (deathsCmd != null) deathsCmd.setExecutor(new DeathsCommand(this));
@@ -59,6 +77,7 @@ public final class BetterDeathMessagesPlugin extends JavaPlugin {
         ConsoleBanner.enable(this, PluginIdentity.of(this))
             .status(templateCount + " death message templates loaded")
             .hook(papi ? "PAPI" : null)
+            .hook(lastWordsEnabled ? "LastWords" : null)
             .ready(Duration.ofMillis(System.currentTimeMillis() - startTime))
             .emit();
     }
@@ -74,11 +93,14 @@ public final class BetterDeathMessagesPlugin extends JavaPlugin {
     public void reload() {
         reloadConfig();
         loadMessages();
+        // Rebuild picker so it picks up the reloaded messages + plugin config.
+        messagePicker = new MessagePicker(messagesConfig, getConfig(), lastWordsCache);
     }
 
     private void loadMessages() {
         File file = new File(getDataFolder(), "messages.yml");
         messagesConfig = YamlConfiguration.loadConfiguration(file);
+        // Initial picker; will be rebuilt with cache in onEnable / reload.
         messagePicker  = new MessagePicker(messagesConfig);
     }
 
@@ -106,4 +128,5 @@ public final class BetterDeathMessagesPlugin extends JavaPlugin {
     public MessagePicker getMessagePicker()         { return messagePicker; }
     public FirstDeathTracker getFirstDeathTracker() { return firstDeathTracker; }
     public FileConfiguration getMessagesConfig()    { return messagesConfig; }
+    public LastWordsCache getLastWordsCache()       { return lastWordsCache; }
 }

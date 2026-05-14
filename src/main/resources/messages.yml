@@ -1,3 +1,8 @@
+# El token {last_words} se reemplaza por el último mensaje público
+# del jugador (ver last-words en config.yml). Si no hay mensaje en
+# caché, se sustituye por last-words.fallback (vacío por defecto).
+# Ejemplo:
+#   - "<gray><player> cayó. Últimas palabras: <italic>\"{last_words}\"</italic></gray>"
 messages:
   fall:
     - "<red><player></red> <gray>descubrió que la gravedad no negocia</gray>"
