@@ -66,4 +66,8 @@ public class DeathStatsService {
             throw new UncheckedIOException(e);
         }
     }
+
+    public java.util.Map<UUID, PlayerDeathStats> getAllStats() {
+        return java.util.Collections.unmodifiableMap(stats);
+    }
 }

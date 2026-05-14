@@ -72,7 +72,8 @@ public class MessagePicker {
             .replace("{x}",          String.valueOf((int) ctx.deathLocation().getX()))
             .replace("{y}",          String.valueOf((int) ctx.deathLocation().getY()))
             .replace("{z}",          String.valueOf((int) ctx.deathLocation().getZ()))
-            .replace("{dimension}",  ctx.dimension());
+            .replace("{dimension}",       ctx.dimension())
+            .replace("{inventory_value}", String.format("%.0f", ctx.inventoryValue()));
 
         return MM.deserialize(rendered);
     }

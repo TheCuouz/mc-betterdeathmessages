@@ -16,5 +16,6 @@ public record DeathContext(
     double fallDistance,
     String biome,
     Location deathLocation,
-    String dimension   // "overworld", "nether", "the_end"
+    String dimension,
+    double inventoryValue   // 0.0 if Vault unavailable
 ) {}

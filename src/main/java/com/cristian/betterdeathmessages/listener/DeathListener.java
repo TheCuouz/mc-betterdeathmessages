@@ -66,6 +66,10 @@ public class DeathListener implements Listener {
             default       -> victim.getWorld().getName().toLowerCase();
         };
 
+        double inventoryValue = plugin.isVaultAvailable()
+            ? plugin.getVaultHook().estimateInventoryValue(victim.getInventory().getContents())
+            : 0.0;
+
         DeathContext ctx = new DeathContext(
             victim,
             playerKiller,
@@ -75,7 +79,8 @@ public class DeathListener implements Listener {
             victim.getFallDistance(),
             victim.getWorld().getBiome(victim.getLocation()).getKey().getKey(),
             victim.getLocation(),
-            dimension
+            dimension,
+            inventoryValue
         );
 
         String category = DeathCategoryResolver.resolve(
