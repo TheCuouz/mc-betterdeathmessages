@@ -60,3 +60,23 @@ kill-streaks:
 # Message template in lang/<locale>.yml under first-blood.message.
 first-blood:
   enabled: true
+
+# ============================================================
+# BROADCAST RADIUS
+# ============================================================
+# -1  = send death message to ALL players online (default).
+# >0  = only players within this many blocks in the same world see it.
+broadcast:
+  radius: -1
+
+# ============================================================
+# DEATH SOUND
+# ============================================================
+# Plays a sound to nearby players when someone dies.
+# sound: any Paper Sound enum name.
+death-sound:
+  enabled: true
+  sound: ENTITY_PLAYER_DEATH
+  radius: 50
+  volume: 1.0
+  pitch: 1.0
