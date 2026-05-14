@@ -4,7 +4,7 @@ main: com.cristian.betterdeathmessages.BetterDeathMessagesPlugin
 api-version: "1.21"
 description: "Narrative death messages with hover stats and global broadcasts"
 authors: [Cristian]
-softdepend: [PlaceholderAPI]
+softdepend: [PlaceholderAPI, Vault]
 
 commands:
   deaths:
