@@ -1,8 +1,7 @@
 # BetterDeathMessages — english
-# All strings are MiniMessage. The chat prefix is prepended by the SDK
-# automatically — no <prefix> needed here.
-# Token {last_words} is replaced with the player's last public chat message.
-# If no message is cached, last-words.fallback from config.yml is used instead.
+# All strings are MiniMessage.
+# Tokens: {player} {killer} {weapon} {mob} {distance} {biome} {last_words}
+#         {x} {y} {z} {dimension}
 
 # ── Command feedback ──────────────────────────────────────────────────────────
 command:
@@ -10,7 +9,7 @@ command:
   reload-success: "BetterDeathMessages reloaded."
   usage-bdm: "Usage: /bdm reload"
   player-not-found: "Player not found: {player}"
-  usage-deaths: "Usage: /deaths <player>"
+  usage-deaths: "Usage: /deaths [player] | /deaths top [killers|deaths] [page]"
 
 # ── Death stats hover / deaths command ───────────────────────────────────────
 stats:
@@ -22,46 +21,194 @@ stats:
   kill-streak-current: "<yellow>Current streak: <white>{value}</white></yellow>"
   deaths-header: "<gold>══ Stats for <white>{player}</white> ══</gold>"
 
+# ── Leaderboard ───────────────────────────────────────────────────────────────
+leaderboard:
+  killers-header: "<gold>══ Top Killers ══</gold>"
+  deaths-header: "<gold>══ Top Deaths ══</gold>"
+  entry: "<gray>{pos}. <white>{player}</white> — <yellow>{value}</yellow></gray>"
+  empty: "<gray>No data yet.</gray>"
+
 # ── First death of the day ────────────────────────────────────────────────────
 first-death-of-day:
   message: "<gold>{player}</gold> <yellow>has the honor of dying first today!</yellow>"
 
+# ── Kill streaks & first blood ────────────────────────────────────────────────
+kill-streak:
+  "3":  "<yellow>⚔ {killer} <gray>is on a</gray> <red>killing spree</red> <gray>(3 kills)!</gray>"
+  "5":  "<gold>⚔ {killer} <gray>is</gray> <red>UNSTOPPABLE</red> <gray>(5 kills)!</gray>"
+  "10": "<red>☠ {killer} <dark_red>is a MONSTER</dark_red> <gray>(10 kills)! Someone stop them!</gray>"
+  "20": "<dark_red>☠ {killer} <red>IS GODLIKE</red> <gray>(20 kills)!</gray>"
+first-blood:
+  message: "<dark_red>⚔ FIRST BLOOD!</dark_red> <gold>{killer}</gold> <gray>drew first blood against</gray> <red>{victim}</red><gray>!</gray>"
+
 # ── Death message templates ───────────────────────────────────────────────────
-# Each category is a list; one is chosen at random on each death.
-# Available tokens: {player}, {killer}, {weapon}, {mob}, {distance}, {biome}, {last_words}
 messages:
   fall:
     - "<red>{player}</red> <gray>discovered that gravity isn't up for negotiation</gray>"
     - "<red>{player}</red> <gray>failed their skydiving exam from</gray> <yellow>{distance}</yellow> <gray>blocks up</gray>"
+    - "<red>{player}</red> <gray>went from {y} to 0 the fast way at</gray> <aqua>{x}, {z}</aqua>"
+    - "<red>{player}</red> <gray>treated the ground like a suggestion... it disagreed</gray>"
   lava:
     - "<red>{player}</red> <gray>became part of the volcanic landscape</gray>"
     - "<red>{player}</red> <gray>decided to swim in lava... just once</gray>"
+    - "<red>{player}</red> <gray>discovered lava is not a hot tub</gray>"
+  fire:
+    - "<red>{player}</red> <gray>forgot that fire was invented to cook food, not players</gray>"
+    - "<red>{player}</red> <gray>became remarkably flammable at</gray> <aqua>{x}, {y}, {z}</aqua>"
+    - "<red>{player}</red> <gray>stopped, dropped, but forgot to roll</gray>"
   drown:
     - "<red>{player}</red> <gray>remembered too late that they aren't a fish</gray>"
     - "<red>{player}</red> <gray>forgot that breathing underwater isn't a human skill</gray>"
+    - "<red>{player}</red> <gray>explored the depths of {biome}... permanently</gray>"
   void:
     - "<red>{player}</red> <gray>explored the eternal void</gray>"
     - "<red>{player}</red> <gray>was convinced the abyss was a swimming pool</gray>"
+    - "<dark_gray>{player}</dark_gray> <gray>fell into the nothing below {dimension}</gray>"
+  explosion:
+    - "<red>{player}</red> <gray>was rearranged at the molecular level</gray>"
+    - "<red>{player}</red> <gray>found out the hard way that explosions are dangerous</gray>"
+    - "<red>{player}</red> <gray>went boom at</gray> <aqua>{x}, {y}, {z}</aqua>"
+  magic:
+    - "<light_purple>{player}</light_purple> <gray>was defeated by arcane forces</gray>"
+    - "<light_purple>{player}</light_purple> <gray>couldn't handle the magic in {dimension}</gray>"
+  lightning:
+    - "<yellow>{player}</yellow> <gray>became a lightning rod at</gray> <aqua>{x}, {y}, {z}</aqua>"
+    - "<yellow>⚡ {player}</yellow> <gray>was personally smited by the heavens</gray>"
+    - "<yellow>{player}</yellow> <gray>had 1 in 300,000 odds and still lost</gray>"
+  cramming:
+    - "<red>{player}</red> <gray>got a little too cozy with their mob friends</gray>"
+    - "<red>{player}</red> <gray>was squeezed out of existence</gray>"
+  freeze:
+    - "<aqua>{player}</aqua> <gray>became a permanent ice sculpture in {biome}</gray>"
+    - "<aqua>{player}</aqua> <gray>stayed too long in the cold... forever</gray>"
+  suffocation:
+    - "<red>{player}</red> <gray>became one with the block at</gray> <aqua>{x}, {y}, {z}</aqua>"
+    - "<red>{player}</red> <gray>got a little too embedded in the world</gray>"
+  cactus:
+    - "<green>{player}</green> <gray>tried to hug a cactus. The cactus won.</gray>"
+    - "<green>{player}</green> <gray>discovered cactus is not a pillow</gray>"
+  sonic_boom:
+    - "<dark_gray>☠ {player}</dark_gray> <gray>was shredded by a sonic boom from the Warden</gray>"
+    - "<dark_gray>☠ {player}</dark_gray> <gray>underestimated what lurks below {dimension}</gray>"
+  starvation:
+    - "<yellow>{player}</yellow> <gray>forgot that food exists</gray>"
+    - "<yellow>{player}</yellow> <gray>starved to death. Truly a skill issue.</gray>"
+  poison:
+    - "<green>{player}</green> <gray>succumbed to poison in {biome}</gray>"
+    - "<green>{player}</green> <gray>turned green, then didn't turn back</gray>"
+  wither_effect:
+    - "<dark_gray>{player}</dark_gray> <gray>withered away into nothing</gray>"
+    - "<dark_gray>{player}</dark_gray> <gray>was consumed by the wither effect</gray>"
   pvp:
     - "<red>{player}</red> <gray>was defeated by</gray> <gold>{killer}</gold> <gray>wielding</gray> <aqua>{weapon}</aqua>"
     - "<gold>{killer}</gold> <gray>proved their superiority over</gray> <red>{player}</red>"
-    - "<red>{player}</red> <gray>underestimated the power of</gray> <gold>{killer}</gold>"
+    - "<red>{player}</red> <gray>underestimated</gray> <gold>{killer}</gold> <gray>at</gray> <aqua>{x}, {y}, {z}</aqua>"
+    - "<gold>{killer}</gold> <gray>sent</gray> <red>{player}</red> <gray>back to their bed with a</gray> <aqua>{weapon}</aqua>"
+    - "<red>{player}</red><gray>'s last words:</gray> <italic><gray>{last_words}</gray></italic> <gray>— then</gray> <gold>{killer}</gold> <gray>arrived</gray>"
   mob:
     ZOMBIE:
-      - "<red>{player}</red> <gray>fed a hungry zombie</gray>"
+      - "<red>{player}</red> <gray>fed a hungry zombie at</gray> <aqua>{x}, {z}</aqua>"
+      - "<red>{player}</red> <gray>learned zombies can open doors AND defeat players</gray>"
+    ZOMBIE_VILLAGER:
+      - "<red>{player}</red> <gray>was betrayed by a villager who'd been having a rough day</gray>"
+    HUSK:
+      - "<red>{player}</red> <gray>dried out in the desert, helped along by a Husk</gray>"
+    DROWNED:
+      - "<red>{player}</red> <gray>met a Drowned in</gray> <aqua>{biome}</aqua> <gray>and lost</gray>"
+    ZOMBIFIED_PIGLIN:
+      - "<red>{player}</red> <gray>accidentally angered every Zombified Piglin in the Nether</gray>"
+      - "<red>{player}</red> <gray>learned 'neutral' doesn't mean 'friendly'</gray>"
     SKELETON:
       - "<red>{player}</red> <gray>caught an arrow... but not from Cupid</gray>"
+      - "<red>{player}</red> <gray>was sniped from</gray> <yellow>{distance}</yellow> <gray>blocks by a Skeleton</gray>"
+    STRAY:
+      - "<aqua>{player}</aqua> <gray>was slowed, then stopped, by a Stray's arrow</gray>"
+    BOGGED:
+      - "<green>{player}</green> <gray>was poisoned to death by a Bogged's arrow</gray>"
+    WITHER_SKELETON:
+      - "<dark_gray>{player}</dark_gray> <gray>got the Wither effect from a Wither Skeleton. It didn't end well.</gray>"
     CREEPER:
-      - "<red>{player}</red> <gray>made friends with a creeper. Just the once</gray>"
+      - "<red>{player}</red> <gray>made friends with a creeper. Just the once.</gray>"
+      - "<red>{player}</red> <gray>heard an 'Sssss' in {biome} and didn't run fast enough</gray>"
+      - "<red>{player}</red> <gray>learned that Creepers hug back</gray>"
     SPIDER:
       - "<red>{player}</red> <gray>forgot that spiders bite too</gray>"
+      - "<red>{player}</red> <gray>was arachnophobed to death in {biome}</gray>"
+    CAVE_SPIDER:
+      - "<red>{player}</red> <gray>was poisoned by a Cave Spider in a mineshaft</gray>"
+    ENDERMAN:
+      - "<purple>{player}</purple> <gray>made eye contact. They shouldn't have.</gray>"
+      - "<purple>{player}</purple> <gray>looked at an Enderman at</gray> <aqua>{x}, {z}</aqua><gray>. Rookie mistake.</gray>"
+    ENDERMITE:
+      - "<purple>{player}</purple> <gray>was killed by an Endermite. An Endermite.</gray>"
+    SILVERFISH:
+      - "<red>{player}</red> <gray>was killed by a Silverfish. The audacity.</gray>"
+    WITCH:
+      - "<dark_purple>{player}</dark_purple> <gray>was potioned to death by a Witch</gray>"
+    BLAZE:
+      - "<gold>{player}</gold> <gray>got too close to a Blaze's fireball in the Nether</gray>"
+    GHAST:
+      - "<white>{player}</white> <gray>caught a Ghast fireball face-first in the Nether</gray>"
+      - "<white>{player}</white> <gray>was shrieked at, then destroyed, by a Ghast</gray>"
+    MAGMA_CUBE:
+      - "<red>{player}</red> <gray>was bounced to death by a Magma Cube</gray>"
+    SLIME:
+      - "<green>{player}</green> <gray>was slimed to death. Not their finest moment.</gray>"
+    PILLAGER:
+      - "<red>{player}</red> <gray>was raided by a Pillager crossbow in {biome}</gray>"
+    VINDICATOR:
+      - "<red>{player}</red> <gray>met a Vindicator's axe and lost decisively</gray>"
+    EVOKER:
+      - "<light_purple>{player}</light_purple> <gray>was summoned into the afterlife by an Evoker</gray>"
+    RAVAGER:
+      - "<red>{player}</red> <gray>was trampled by a Ravager during a raid</gray>"
+    VEX:
+      - "<light_purple>{player}</light_purple> <gray>was vexed — literally — to death</gray>"
+    PHANTOM:
+      - "<dark_blue>{player}</dark_blue> <gray>forgot to sleep. The Phantoms didn't.</gray>"
+      - "<dark_blue>{player}</dark_blue> <gray>skipped bedtime in {dimension} and paid for it</gray>"
+    SHULKER:
+      - "<yellow>{player}</yellow> <gray>was levitated then dropped by a Shulker in the End</gray>"
+    GUARDIAN:
+      - "<aqua>{player}</aqua> <gray>was lasered by a Guardian underwater</gray>"
+    ELDER_GUARDIAN:
+      - "<aqua>{player}</aqua> <gray>was cursed by an Elder Guardian and then killed</gray>"
+    HOGLIN:
+      - "<red>{player}</red> <gray>got charged by a Hoglin in the Nether</gray>"
+    PIGLIN:
+      - "<red>{player}</red> <gray>provoked a Piglin in the Nether without enough gold</gray>"
+    PIGLIN_BRUTE:
+      - "<red>{player}</red> <gray>was absolutely destroyed by a Piglin Brute</gray>"
+    ZOGLIN:
+      - "<red>{player}</red> <gray>found out Zoglins don't like visitors</gray>"
+    GOAT:
+      - "<white>{player}</white> <gray>was yeeted off a cliff by a Goat in {biome}</gray>"
+      - "<white>{player}</white> <gray>got rammed by a Goat. Into the void.</gray>"
+    WOLF:
+      - "<red>{player}</red> <gray>forgot wolves aren't always friendly</gray>"
+    BEE:
+      - "<yellow>{player}</yellow> <gray>was stung to death. By a bee. A</gray> <italic>bee</italic><gray>.</gray>"
+    IRON_GOLEM:
+      - "<red>{player}</red> <gray>attacked a village and faced the consequences</gray>"
+    PANDA:
+      - "<green>{player}</green> <gray>was beaten to death by a Panda. Truly unexpected.</gray>"
+    BREEZE:
+      - "<red>{player}</red> <gray>was blasted by a Breeze's wind charge at</gray> <aqua>{x}, {z}</aqua>"
+    WARDEN:
+      - "<dark_gray>☠ {player}</dark_gray> <gray>disturbed something ancient in the deep dark</gray>"
+      - "<dark_gray>☠ {player}</dark_gray> <gray>made too much noise at</gray> <aqua>{x}, {y}, {z}</aqua>"
+      - "<dark_gray>☠ The Warden</dark_gray> <gray>claimed</gray> <dark_gray>{player}</dark_gray>"
     ENDER_DRAGON:
       - "<dark_purple>{player}</dark_purple> <gray>dared to challenge the dragon... and lost</gray>"
       - "<dark_purple>The Ender Dragon</dark_purple> <gray>claimed the soul of</gray> <dark_purple>{player}</dark_purple>"
+      - "<dark_purple>{player}</dark_purple> <gray>flew too close to the dragon in the End</gray>"
     WITHER:
       - "<dark_gray>{player}</dark_gray> <gray>was consumed by the Wither</gray>"
+      - "<dark_gray>☠ {player}</dark_gray> <gray>summoned something they couldn't handle</gray>"
     DEFAULT:
       - "<red>{player}</red> <gray>was slain by a</gray> <gray>{mob}</gray>"
+      - "<red>{player}</red> <gray>lost a fight to a {mob} in {biome}</gray>"
   unknown:
     - "<red>{player}</red> <gray>died in mysterious ways</gray>"
     - "<red>{player}</red> <gray>found the end of their adventure</gray>"
+    - "<red>{player}</red> <gray>died somewhere around</gray> <aqua>{x}, {y}, {z}</aqua> <gray>in {dimension}</gray>"
