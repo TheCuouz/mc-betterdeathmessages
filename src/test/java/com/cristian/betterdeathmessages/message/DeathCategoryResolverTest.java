@@ -44,4 +44,79 @@ class DeathCategoryResolverTest {
     void pvpKillTakesPriorityOverMob() {
         assertEquals("pvp", DeathCategoryResolver.resolve(true, true, "ZOMBIE", "ENTITY_ATTACK"));
     }
+
+    @Test
+    void fireDamage_returnsFire() {
+        assertEquals("fire", DeathCategoryResolver.resolve(false, false, "", "FIRE"));
+    }
+
+    @Test
+    void fireTickDamage_returnsFire() {
+        assertEquals("fire", DeathCategoryResolver.resolve(false, false, "", "FIRE_TICK"));
+    }
+
+    @Test
+    void hotFloor_returnsFire() {
+        assertEquals("fire", DeathCategoryResolver.resolve(false, false, "", "HOT_FLOOR"));
+    }
+
+    @Test
+    void explosionDamage_returnsExplosion() {
+        assertEquals("explosion", DeathCategoryResolver.resolve(false, false, "", "ENTITY_EXPLOSION"));
+    }
+
+    @Test
+    void blockExplosionDamage_returnsExplosion() {
+        assertEquals("explosion", DeathCategoryResolver.resolve(false, false, "", "BLOCK_EXPLOSION"));
+    }
+
+    @Test
+    void magicDamage_returnsMagic() {
+        assertEquals("magic", DeathCategoryResolver.resolve(false, false, "", "MAGIC"));
+    }
+
+    @Test
+    void lightningDamage_returnsLightning() {
+        assertEquals("lightning", DeathCategoryResolver.resolve(false, false, "", "LIGHTNING"));
+    }
+
+    @Test
+    void crammingDamage_returnsCramming() {
+        assertEquals("cramming", DeathCategoryResolver.resolve(false, false, "", "CRAMMING"));
+    }
+
+    @Test
+    void freezeDamage_returnsFreeze() {
+        assertEquals("freeze", DeathCategoryResolver.resolve(false, false, "", "FREEZE"));
+    }
+
+    @Test
+    void suffocationDamage_returnsSuffocation() {
+        assertEquals("suffocation", DeathCategoryResolver.resolve(false, false, "", "SUFFOCATION"));
+    }
+
+    @Test
+    void contactDamage_returnsCactus() {
+        assertEquals("cactus", DeathCategoryResolver.resolve(false, false, "", "CONTACT"));
+    }
+
+    @Test
+    void sonicBoomDamage_returnsSonicBoom() {
+        assertEquals("sonic_boom", DeathCategoryResolver.resolve(false, false, "", "SONIC_BOOM"));
+    }
+
+    @Test
+    void starvationDamage_returnsStarvation() {
+        assertEquals("starvation", DeathCategoryResolver.resolve(false, false, "", "STARVATION"));
+    }
+
+    @Test
+    void poisonDamage_returnsPoison() {
+        assertEquals("poison", DeathCategoryResolver.resolve(false, false, "", "POISON"));
+    }
+
+    @Test
+    void witherEffectDamage_returnsWitherEffect() {
+        assertEquals("wither_effect", DeathCategoryResolver.resolve(false, false, "", "WITHER"));
+    }
 }
