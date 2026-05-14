@@ -1,3 +1,5 @@
+> 🌐 **English** · [Español](es/PlaceholderAPI.md)
+
 # 📊 PlaceholderAPI Integration
 
 BetterDeathMessages registers its own `bdm` expansion on enable — no separate ecloud download required. The placeholders work in any PAPI-compatible plugin: scoreboards, TAB lists, chat formats, HUDs, holograms, anywhere.

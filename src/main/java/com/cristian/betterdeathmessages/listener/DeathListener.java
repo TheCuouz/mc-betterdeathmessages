@@ -78,10 +78,9 @@ public class DeathListener implements Listener {
 
         Component message = plugin.getMessagePicker().pick(ctx);
 
-        List<String> broadcastCauses = plugin.getMessagesConfig()
-            .getStringList("global-broadcast.enabled-causes");
+        List<String> broadcastCauses = plugin.getConfigManager().globalBroadcastCauses();
         if (isBroadcastCause(category, broadcastCauses)
-                && plugin.getMessagesConfig().getBoolean("global-broadcast.hover-stats", true)) {
+                && plugin.getConfigManager().globalBroadcastHoverStats()) {
             PlayerDeathStats victimStats = plugin.getDeathStatsService().get(victim.getUniqueId());
             message = message.hoverEvent(HoverEvent.showText(buildHoverText(victim, victimStats)));
         }
@@ -100,10 +99,9 @@ public class DeathListener implements Listener {
         });
 
         if (plugin.getFirstDeathTracker().isFirstTodayAndRecord(victim.getUniqueId())
-                && plugin.getMessagesConfig().getBoolean("first-death-of-day.enabled", false)) {
-            String msg = plugin.getMessagesConfig()
-                .getString("first-death-of-day.message", "")
-                .replace("<player>", victim.getName());
+                && plugin.getConfigManager().firstDeathEnabled()) {
+            String msg = plugin.getMessages()
+                .get("first-death-of-day.message", "player", victim.getName());
             if (!msg.isEmpty()) {
                 Bukkit.broadcast(MM.deserialize(msg));
             }
@@ -121,11 +119,11 @@ public class DeathListener implements Listener {
     private Component buildHoverText(Player victim, PlayerDeathStats stats) {
         double kdr = (double) stats.totalKills / Math.max(1, stats.totalDeaths);
         return MM.deserialize(
-            "<gold>" + victim.getName() + " — Stats</gold>\n" +
-            "<yellow>Muertes totales: <white>" + stats.totalDeaths + "</white></yellow>\n" +
-            "<yellow>Asesinatos:      <white>" + stats.totalKills  + "</white></yellow>\n" +
-            "<yellow>KDR:             <white>" + String.format("%.2f", kdr) + "</white></yellow>\n" +
-            "<yellow>Racha máxima:    <white>" + stats.longestKillStreak + "</white></yellow>"
+            plugin.getMessages().get("stats.header", "player", victim.getName()) + "\n" +
+            plugin.getMessages().get("stats.total-deaths", "value", String.valueOf(stats.totalDeaths)) + "\n" +
+            plugin.getMessages().get("stats.kills",        "value", String.valueOf(stats.totalKills))  + "\n" +
+            plugin.getMessages().get("stats.kdr",          "value", String.format("%.2f", kdr))        + "\n" +
+            plugin.getMessages().get("stats.kill-streak-max", "value", String.valueOf(stats.longestKillStreak))
         );
     }
 }

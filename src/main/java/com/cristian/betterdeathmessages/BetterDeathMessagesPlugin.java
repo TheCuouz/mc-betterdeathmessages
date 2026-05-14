@@ -1,5 +1,7 @@
 package com.cristian.betterdeathmessages;
 
+import com.cristian.betterdeathmessages.cfg.ConfigManager;
+import com.cristian.betterdeathmessages.cfg.MessageManager;
 import com.cristian.betterdeathmessages.command.BdmCommand;
 import com.cristian.betterdeathmessages.command.DeathsCommand;
 import com.cristian.betterdeathmessages.integration.PapiHook;
@@ -13,29 +15,28 @@ import com.ttsstudio.sdk.PluginIdentity;
 import com.ttsstudio.sdk.console.ConsoleBanner;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.File;
 import java.time.Duration;
 
 public final class BetterDeathMessagesPlugin extends JavaPlugin {
 
+    private ConfigManager configManager;
+    private MessageManager messageManager;
     private DeathStatsService deathStatsService;
     private MessagePicker messagePicker;
     private FirstDeathTracker firstDeathTracker;
-    private FileConfiguration messagesConfig;
     private LastWordsCache lastWordsCache;
 
     @Override
     public void onEnable() {
         long startTime = System.currentTimeMillis();
 
-        saveDefaultConfig();
-        saveResource("messages.yml", false);
+        configManager = new ConfigManager(this);
+        configManager.reload();
 
-        loadMessages();
+        messageManager = new MessageManager(this, configManager);
+        messageManager.reload();
 
         deathStatsService = new DeathStatsService(getDataFolder());
         deathStatsService.load();
@@ -43,15 +44,14 @@ public final class BetterDeathMessagesPlugin extends JavaPlugin {
         firstDeathTracker = new FirstDeathTracker();
 
         // Last Words cache + capture listener (privacy-first, public chat only).
-        long cacheSeconds = Math.max(1L, getConfig().getLong("last-words.cache-seconds", 60L));
+        long cacheSeconds = configManager.lastWordsCacheSeconds();
         lastWordsCache = new LastWordsCache(cacheSeconds * 1000L);
-        boolean lastWordsEnabled = getConfig().getBoolean("last-words.enabled", true);
 
-        // MessagePicker is rebuilt here so it has the cache + plugin config.
-        messagePicker = new MessagePicker(messagesConfig, getConfig(), lastWordsCache);
+        // MessagePicker is rebuilt here so it has the cache + lang templates.
+        messagePicker = new MessagePicker(messageManager.getTemplates(), configManager.raw(), lastWordsCache);
 
         getServer().getPluginManager().registerEvents(new DeathListener(this), this);
-        if (lastWordsEnabled) {
+        if (configManager.lastWordsEnabled()) {
             getServer().getPluginManager()
                 .registerEvents(new ChatCaptureListener(lastWordsCache), this);
             // Periodic janitor: drop expired entries every minute.
@@ -77,7 +77,7 @@ public final class BetterDeathMessagesPlugin extends JavaPlugin {
         ConsoleBanner.enable(this, PluginIdentity.of(this))
             .status(templateCount + " death message templates loaded")
             .hook(papi ? "PAPI" : null)
-            .hook(lastWordsEnabled ? "LastWords" : null)
+            .hook(configManager.lastWordsEnabled() ? "LastWords" : null)
             .ready(Duration.ofMillis(System.currentTimeMillis() - startTime))
             .emit();
     }
@@ -91,32 +91,25 @@ public final class BetterDeathMessagesPlugin extends JavaPlugin {
     }
 
     public void reload() {
-        reloadConfig();
-        loadMessages();
+        configManager.reload();
+        messageManager.reload();
         // Rebuild picker so it picks up the reloaded messages + plugin config.
-        messagePicker = new MessagePicker(messagesConfig, getConfig(), lastWordsCache);
-    }
-
-    private void loadMessages() {
-        File file = new File(getDataFolder(), "messages.yml");
-        messagesConfig = YamlConfiguration.loadConfiguration(file);
-        // Initial picker; will be rebuilt with cache in onEnable / reload.
-        messagePicker  = new MessagePicker(messagesConfig);
+        messagePicker = new MessagePicker(messageManager.getTemplates(), configManager.raw(), lastWordsCache);
     }
 
     private int countDeathTemplates() {
         int total = 0;
-        ConfigurationSection root = messagesConfig.getConfigurationSection("messages");
+        ConfigurationSection root = messageManager.getTemplates().getConfigurationSection("messages");
         if (root == null) return 0;
         for (String key : root.getKeys(false)) {
             String path = "messages." + key;
-            if (messagesConfig.isList(path)) {
-                total += messagesConfig.getStringList(path).size();
-            } else if (messagesConfig.isConfigurationSection(path)) {
-                ConfigurationSection sub = messagesConfig.getConfigurationSection(path);
+            if (messageManager.getTemplates().isList(path)) {
+                total += messageManager.getTemplates().getStringList(path).size();
+            } else if (messageManager.getTemplates().isConfigurationSection(path)) {
+                ConfigurationSection sub = messageManager.getTemplates().getConfigurationSection(path);
                 if (sub != null) {
                     for (String subKey : sub.getKeys(false)) {
-                        total += messagesConfig.getStringList(path + "." + subKey).size();
+                        total += messageManager.getTemplates().getStringList(path + "." + subKey).size();
                     }
                 }
             }
@@ -124,9 +117,10 @@ public final class BetterDeathMessagesPlugin extends JavaPlugin {
         return total;
     }
 
+    public ConfigManager getConfigManager()     { return configManager; }
+    public MessageManager getMessages()         { return messageManager; }
     public DeathStatsService getDeathStatsService() { return deathStatsService; }
-    public MessagePicker getMessagePicker()         { return messagePicker; }
+    public MessagePicker getMessagePicker()     { return messagePicker; }
     public FirstDeathTracker getFirstDeathTracker() { return firstDeathTracker; }
-    public FileConfiguration getMessagesConfig()    { return messagesConfig; }
-    public LastWordsCache getLastWordsCache()       { return lastWordsCache; }
+    public LastWordsCache getLastWordsCache()   { return lastWordsCache; }
 }
