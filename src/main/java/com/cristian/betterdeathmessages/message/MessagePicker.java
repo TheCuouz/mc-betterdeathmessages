@@ -1,5 +1,6 @@
 package com.cristian.betterdeathmessages.message;
 
+import com.cristian.betterdeathmessages.lastwords.LastWordsCache;
 import com.cristian.betterdeathmessages.model.DeathContext;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -8,6 +9,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 public class MessagePicker {
@@ -15,10 +17,20 @@ public class MessagePicker {
     private static final MiniMessage MM = MiniMessage.miniMessage();
     private static final Random RANDOM = new Random();
 
-    private final FileConfiguration config;
+    private final FileConfiguration messages;
+    private final FileConfiguration pluginConfig;
+    private final LastWordsCache lastWordsCache;
 
-    public MessagePicker(FileConfiguration config) {
-        this.config = config;
+    public MessagePicker(FileConfiguration messages) {
+        this(messages, null, null);
+    }
+
+    public MessagePicker(FileConfiguration messages,
+                         FileConfiguration pluginConfig,
+                         LastWordsCache lastWordsCache) {
+        this.messages = messages;
+        this.pluginConfig = pluginConfig;
+        this.lastWordsCache = lastWordsCache;
     }
 
     public Component pick(DeathContext ctx) {
@@ -30,29 +42,45 @@ public class MessagePicker {
         );
 
         List<String> templates = getTemplates(category);
-        if (templates.isEmpty()) templates = config.getStringList("messages.unknown");
+        if (templates.isEmpty()) templates = messages.getStringList("messages.unknown");
         if (templates.isEmpty()) return Component.text(ctx.victim().getName() + " died.");
 
         String template = templates.get(RANDOM.nextInt(templates.size()));
         String rendered = template
-            .replace("<player>",   ctx.victim().getName())
-            .replace("<killer>",   ctx.playerKiller() != null ? ctx.playerKiller().getName() : "")
-            .replace("<weapon>",   weaponName(ctx.weapon()))
-            .replace("<mob>",      ctx.mobKiller() != null ? formatMob(ctx.mobKiller().getType().name()) : "")
-            .replace("<distance>", String.format("%.0f", ctx.fallDistance()))
-            .replace("<biome>",    ctx.biome());
+            .replace("<player>",     ctx.victim().getName())
+            .replace("<killer>",     ctx.playerKiller() != null ? ctx.playerKiller().getName() : "")
+            .replace("<weapon>",     weaponName(ctx.weapon()))
+            .replace("<mob>",        ctx.mobKiller() != null ? formatMob(ctx.mobKiller().getType().name()) : "")
+            .replace("<distance>",   String.format("%.0f", ctx.fallDistance()))
+            .replace("<biome>",      ctx.biome())
+            .replace("{last_words}", resolveLastWords(ctx));
 
         return MM.deserialize(rendered);
+    }
+
+    private String resolveLastWords(DeathContext ctx) {
+        String fallback = pluginConfig != null
+            ? pluginConfig.getString("last-words.fallback", "")
+            : "";
+        if (lastWordsCache == null) return fallback;
+
+        Optional<String> cached = lastWordsCache.get(ctx.victim().getUniqueId());
+        // Escape MiniMessage tag-openers so player chat cannot break formatting.
+        return cached.map(MessagePicker::escapeForMiniMessage).orElse(fallback);
+    }
+
+    private static String escapeForMiniMessage(String raw) {
+        return raw.replace("<", "\\<");
     }
 
     private List<String> getTemplates(String category) {
         if (category.startsWith("mob.")) {
             String mobType = category.substring(4);
-            List<String> specific = config.getStringList("messages.mob." + mobType);
+            List<String> specific = messages.getStringList("messages.mob." + mobType);
             if (!specific.isEmpty()) return specific;
-            return config.getStringList("messages.mob.DEFAULT");
+            return messages.getStringList("messages.mob.DEFAULT");
         }
-        return config.getStringList("messages." + category);
+        return messages.getStringList("messages." + category);
     }
 
     private String weaponName(ItemStack item) {
