@@ -33,4 +33,10 @@ public final class ConfigManager {
     public boolean globalBroadcastHoverStats() { return cfg.getBoolean("global-broadcast.hover-stats", true); }
 
     public boolean firstDeathEnabled() { return cfg.getBoolean("first-death-of-day.enabled", true); }
+
+    public boolean killStreakEnabled() { return cfg.getBoolean("kill-streaks.enabled", true); }
+    public java.util.List<Integer> killStreakThresholds() {
+        return cfg.getIntegerList("kill-streaks.thresholds");
+    }
+    public boolean firstBloodEnabled() { return cfg.getBoolean("first-blood.enabled", true); }
 }

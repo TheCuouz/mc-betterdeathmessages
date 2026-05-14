@@ -11,6 +11,8 @@ import com.cristian.betterdeathmessages.listener.DeathListener;
 import com.cristian.betterdeathmessages.message.MessagePicker;
 import com.cristian.betterdeathmessages.service.DeathStatsService;
 import com.cristian.betterdeathmessages.tracker.FirstDeathTracker;
+import com.cristian.betterdeathmessages.tracker.KillStreakBroadcaster;
+import com.cristian.betterdeathmessages.tracker.FirstBloodTracker;
 import com.ttsstudio.sdk.PluginIdentity;
 import com.ttsstudio.sdk.console.ConsoleBanner;
 import org.bstats.bukkit.Metrics;
@@ -27,6 +29,8 @@ public final class BetterDeathMessagesPlugin extends JavaPlugin {
     private MessagePicker messagePicker;
     private FirstDeathTracker firstDeathTracker;
     private LastWordsCache lastWordsCache;
+    private KillStreakBroadcaster killStreakBroadcaster;
+    private FirstBloodTracker firstBloodTracker;
 
     @Override
     public void onEnable() {
@@ -49,6 +53,12 @@ public final class BetterDeathMessagesPlugin extends JavaPlugin {
 
         // MessagePicker is rebuilt here so it has the cache + lang templates.
         messagePicker = new MessagePicker(messageManager.getTemplates(), configManager.raw(), lastWordsCache);
+
+        java.util.List<Integer> thresholds = configManager.killStreakThresholds();
+        killStreakBroadcaster = thresholds.isEmpty()
+            ? new KillStreakBroadcaster(java.util.List.of(3, 5, 10, 20))
+            : new KillStreakBroadcaster(thresholds);
+        firstBloodTracker = new FirstBloodTracker();
 
         getServer().getPluginManager().registerEvents(new DeathListener(this), this);
         if (configManager.lastWordsEnabled()) {
@@ -123,4 +133,6 @@ public final class BetterDeathMessagesPlugin extends JavaPlugin {
     public MessagePicker getMessagePicker()     { return messagePicker; }
     public FirstDeathTracker getFirstDeathTracker() { return firstDeathTracker; }
     public LastWordsCache getLastWordsCache()   { return lastWordsCache; }
+    public KillStreakBroadcaster getKillStreakBroadcaster() { return killStreakBroadcaster; }
+    public FirstBloodTracker getFirstBloodTracker()         { return firstBloodTracker; }
 }
