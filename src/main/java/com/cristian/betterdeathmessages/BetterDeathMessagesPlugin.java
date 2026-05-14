@@ -105,6 +105,12 @@ public final class BetterDeathMessagesPlugin extends JavaPlugin {
         messageManager.reload();
         // Rebuild picker so it picks up the reloaded messages + plugin config.
         messagePicker = new MessagePicker(messageManager.getTemplates(), configManager.raw(), lastWordsCache);
+
+        // Rebuild kill streak broadcaster with new threshold config.
+        java.util.List<Integer> thresholds = configManager.killStreakThresholds();
+        killStreakBroadcaster = thresholds.isEmpty()
+            ? new KillStreakBroadcaster(java.util.List.of(3, 5, 10, 20))
+            : new KillStreakBroadcaster(thresholds);
     }
 
     private int countDeathTemplates() {
