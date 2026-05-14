@@ -68,7 +68,11 @@ public class MessagePicker {
             .replace("{mob}",        ctx.mobKiller() != null ? formatMob(ctx.mobKiller().getType().name()) : "")
             .replace("{distance}",   String.format("%.0f", ctx.fallDistance()))
             .replace("{biome}",      ctx.biome())
-            .replace("{last_words}", resolveLastWords(ctx));
+            .replace("{last_words}", resolveLastWords(ctx))
+            .replace("{x}",          String.valueOf((int) ctx.deathLocation().getX()))
+            .replace("{y}",          String.valueOf((int) ctx.deathLocation().getY()))
+            .replace("{z}",          String.valueOf((int) ctx.deathLocation().getZ()))
+            .replace("{dimension}",  ctx.dimension());
 
         return MM.deserialize(rendered);
     }
