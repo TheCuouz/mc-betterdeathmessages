@@ -29,6 +29,13 @@ public class DeathsCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command,
                              @NotNull String label, @NotNull String[] args) {
+        if (args.length >= 1 && args[0].equalsIgnoreCase("top")) {
+            boolean byKills = args.length < 2 || args[1].equalsIgnoreCase("killers");
+            int page = args.length >= 3 ? parseIntSafe(args[2], 1) : 1;
+            showLeaderboard(sender, byKills, page);
+            return true;
+        }
+
         UUID target;
         String targetName;
 
@@ -62,5 +69,46 @@ public class DeathsCommand implements CommandExecutor {
             plugin.getMessages().get("stats.kill-streak-max",     "value", String.valueOf(stats.longestKillStreak))
         );
         return true;
+    }
+
+    private void showLeaderboard(CommandSender sender, boolean byKills, int page) {
+        var all = plugin.getDeathStatsService().getAllStats();
+        var sorted = all.entrySet().stream()
+            .sorted((a, b) -> byKills
+                ? Integer.compare(b.getValue().totalKills, a.getValue().totalKills)
+                : Integer.compare(b.getValue().totalDeaths, a.getValue().totalDeaths))
+            .toList();
+
+        int pageSize = 10;
+        int start = (page - 1) * pageSize;
+
+        MiniMessage mm = MiniMessage.miniMessage();
+        String headerKey = byKills ? "leaderboard.killers-header" : "leaderboard.deaths-header";
+        String headerRaw = plugin.getMessages().getTemplates().getString(headerKey, "");
+        if (!headerRaw.isEmpty()) sender.sendMessage(mm.deserialize(headerRaw));
+
+        if (sorted.isEmpty() || start >= sorted.size()) {
+            String emptyRaw = plugin.getMessages().getTemplates().getString("leaderboard.empty", "<gray>No data yet.</gray>");
+            sender.sendMessage(mm.deserialize(emptyRaw));
+            return;
+        }
+
+        int end = Math.min(start + pageSize, sorted.size());
+        for (int i = start; i < end; i++) {
+            var entry = sorted.get(i);
+            String name = org.bukkit.Bukkit.getOfflinePlayer(entry.getKey()).getName();
+            if (name == null) name = entry.getKey().toString().substring(0, 8);
+            int value = byKills ? entry.getValue().totalKills : entry.getValue().totalDeaths;
+            String entryRaw = plugin.getMessages().getTemplates()
+                .getString("leaderboard.entry", "<gray>{pos}. {player} — {value}</gray>")
+                .replace("{pos}", String.valueOf(i + 1))
+                .replace("{player}", name)
+                .replace("{value}", String.valueOf(value));
+            sender.sendMessage(mm.deserialize(entryRaw));
+        }
+    }
+
+    private int parseIntSafe(String s, int def) {
+        try { return Math.max(1, Integer.parseInt(s)); } catch (NumberFormatException e) { return def; }
     }
 }
