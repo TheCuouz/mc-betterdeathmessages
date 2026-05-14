@@ -78,27 +78,33 @@ messages:
   cramming:
     - "<red>{player}</red> <gray>got a little too cozy with their mob friends</gray>"
     - "<red>{player}</red> <gray>was squeezed out of existence</gray>"
+    - "<red>{player}</red> <gray>was crushed to nothing at</gray> <aqua>{x}, {y}, {z}</aqua>"
   freeze:
     - "<aqua>{player}</aqua> <gray>became a permanent ice sculpture in {biome}</gray>"
     - "<aqua>{player}</aqua> <gray>stayed too long in the cold... forever</gray>"
+    - "<aqua>{player}</aqua> <gray>froze solid at</gray> <aqua>{x}, {y}, {z}</aqua> <gray>in {dimension}</gray>"
   suffocation:
     - "<red>{player}</red> <gray>became one with the block at</gray> <aqua>{x}, {y}, {z}</aqua>"
     - "<red>{player}</red> <gray>got a little too embedded in the world</gray>"
   cactus:
     - "<green>{player}</green> <gray>tried to hug a cactus. The cactus won.</gray>"
     - "<green>{player}</green> <gray>discovered cactus is not a pillow</gray>"
+    - "<green>{player}</green> <gray>ran into a cactus at</gray> <aqua>{x}, {y}, {z}</aqua> <gray>and didn't survive</gray>"
   sonic_boom:
     - "<dark_gray>☠ {player}</dark_gray> <gray>was shredded by a sonic boom from the Warden</gray>"
     - "<dark_gray>☠ {player}</dark_gray> <gray>underestimated what lurks below {dimension}</gray>"
   starvation:
     - "<yellow>{player}</yellow> <gray>forgot that food exists</gray>"
     - "<yellow>{player}</yellow> <gray>starved to death. Truly a skill issue.</gray>"
+    - "<yellow>{player}</yellow> <gray>wasted away at</gray> <aqua>{x}, {y}, {z}</aqua> <gray>in {dimension}</gray>"
   poison:
     - "<green>{player}</green> <gray>succumbed to poison in {biome}</gray>"
     - "<green>{player}</green> <gray>turned green, then didn't turn back</gray>"
+    - "<green>{player}</green> <gray>was poisoned to death at</gray> <aqua>{x}, {y}, {z}</aqua>"
   wither_effect:
     - "<dark_gray>{player}</dark_gray> <gray>withered away into nothing</gray>"
     - "<dark_gray>{player}</dark_gray> <gray>was consumed by the wither effect</gray>"
+    - "<dark_gray>{player}</dark_gray> <gray>faded out at</gray> <aqua>{x}, {y}, {z}</aqua> <gray>in {dimension}</gray>"
   pvp:
     - "<red>{player}</red> <gray>was defeated by</gray> <gold>{killer}</gold> <gray>wielding</gray> <aqua>{weapon}</aqua>"
     - "<gold>{killer}</gold> <gray>proved their superiority over</gray> <red>{player}</red>"
