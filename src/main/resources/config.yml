@@ -1,3 +1,20 @@
 # BetterDeathMessages Configuration
 # Message templates are in messages.yml
-config-version: 1
+config-version: 2
+
+# ============================================================
+# LAST WORDS  (v1.1.0)
+# ============================================================
+# Captura el último mensaje público de un jugador y lo inyecta
+# en el death message via el token {last_words} en messages.yml.
+#
+# Solo captura chat público — whispers y canales privados se
+# descartan (no entran a la cache). El mensaje cacheado se borra
+# automáticamente tras cache-seconds.
+#
+# Para usarlo, edita tus templates en messages.yml para incluir
+# {last_words} donde quieras la cita.
+last-words:
+  enabled: true
+  cache-seconds: 60
+  fallback: ""
