@@ -61,7 +61,8 @@ public class DeathListener implements Listener {
         String dimension = switch (victim.getWorld().getEnvironment()) {
             case NETHER   -> "nether";
             case THE_END  -> "the_end";
-            default       -> "overworld";
+            case NORMAL   -> "overworld";
+            default       -> victim.getWorld().getName().toLowerCase();
         };
 
         DeathContext ctx = new DeathContext(
@@ -119,6 +120,7 @@ public class DeathListener implements Listener {
         for (String c : enabledCauses) {
             if (c.equalsIgnoreCase("pvp") && category.equals("pvp")) return true;
             if (category.equalsIgnoreCase("mob." + c)) return true;
+            if (c.equalsIgnoreCase(category)) return true;
         }
         return false;
     }

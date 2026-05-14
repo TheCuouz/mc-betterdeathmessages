@@ -119,4 +119,9 @@ class DeathCategoryResolverTest {
     void witherEffectDamage_returnsWitherEffect() {
         assertEquals("wither_effect", DeathCategoryResolver.resolve(false, false, "", "WITHER"));
     }
+
+    @Test
+    void unknownCause_returnsUnknown() {
+        assertEquals("unknown", DeathCategoryResolver.resolve(false, false, "", "SOME_FUTURE_CAUSE"));
+    }
 }
