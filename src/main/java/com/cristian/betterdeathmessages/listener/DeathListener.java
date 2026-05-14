@@ -98,11 +98,42 @@ public class DeathListener implements Listener {
         final Player finalKiller   = playerKiller;
         final String finalCategory = category;
         final UUID victimUuid      = victim.getUniqueId();
+        final String victimName    = victim.getName();
         CompletableFuture.runAsync(() -> {
             plugin.getDeathStatsService().record(victimUuid, finalCategory);
+
             if (finalKiller != null) {
                 plugin.getDeathStatsService().recordKill(finalKiller.getUniqueId());
+                int streak = plugin.getDeathStatsService().get(finalKiller.getUniqueId()).currentKillStreak;
+
+                // Kill streak milestone broadcast
+                if (plugin.getConfigManager().killStreakEnabled()
+                        && plugin.getKillStreakBroadcaster().isMilestone(streak)) {
+                    String streakKey = String.valueOf(streak);
+                    String rawTemplate = plugin.getMessages().getTemplates()
+                        .getString("kill-streak." + streakKey, "");
+                    if (!rawTemplate.isEmpty()) {
+                        String msg = rawTemplate.replace("{killer}", finalKiller.getName());
+                        Bukkit.getScheduler().runTask(plugin,
+                            () -> Bukkit.broadcast(MM.deserialize(msg)));
+                    }
+                }
+
+                // First blood of the day
+                if (plugin.getConfigManager().firstBloodEnabled()
+                        && plugin.getFirstBloodTracker().isFirstTodayAndRecord()) {
+                    String raw = plugin.getMessages().getTemplates()
+                        .getString("first-blood.message", "");
+                    if (!raw.isEmpty()) {
+                        String msg = raw
+                            .replace("{killer}", finalKiller.getName())
+                            .replace("{victim}", victimName);
+                        Bukkit.getScheduler().runTask(plugin,
+                            () -> Bukkit.broadcast(MM.deserialize(msg)));
+                    }
+                }
             }
+
             plugin.getDeathStatsService().save();
         });
 
