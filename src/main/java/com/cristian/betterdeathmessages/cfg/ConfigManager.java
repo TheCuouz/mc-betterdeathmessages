@@ -39,4 +39,13 @@ public final class ConfigManager {
         return cfg.getIntegerList("kill-streaks.thresholds");
     }
     public boolean firstBloodEnabled() { return cfg.getBoolean("first-blood.enabled", true); }
+
+    /** -1 = global broadcast, >0 = radius in blocks within same world. */
+    public int broadcastRadius() { return cfg.getInt("broadcast.radius", -1); }
+
+    public boolean deathSoundEnabled() { return cfg.getBoolean("death-sound.enabled", true); }
+    public String  deathSoundType()    { return cfg.getString("death-sound.sound", "ENTITY_PLAYER_DEATH"); }
+    public int     deathSoundRadius()  { return cfg.getInt("death-sound.radius", 50); }
+    public float   deathSoundVolume()  { return (float) cfg.getDouble("death-sound.volume", 1.0); }
+    public float   deathSoundPitch()   { return (float) cfg.getDouble("death-sound.pitch", 1.0); }
 }
