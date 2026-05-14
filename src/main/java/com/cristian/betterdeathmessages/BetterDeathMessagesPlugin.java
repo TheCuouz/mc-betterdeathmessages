@@ -81,7 +81,7 @@ public final class BetterDeathMessagesPlugin extends JavaPlugin {
         var bdmCmd = getCommand("bdm");
         if (bdmCmd != null) bdmCmd.setExecutor(new BdmCommand(this));
 
-        boolean papi = getServer().getPluginManager().getPlugin("PlaceholderAPI") != null;
+        boolean papi = getServer().getPluginManager().isPluginEnabled("PlaceholderAPI");
         if (papi) {
             new PapiHook(this).register();
         }

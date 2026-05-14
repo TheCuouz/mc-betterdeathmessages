@@ -96,8 +96,16 @@ public class DeathsCommand implements CommandExecutor {
         int end = Math.min(start + pageSize, sorted.size());
         for (int i = start; i < end; i++) {
             var entry = sorted.get(i);
-            String name = org.bukkit.Bukkit.getOfflinePlayer(entry.getKey()).getName();
-            if (name == null) name = entry.getKey().toString().substring(0, 8);
+            String name = null;
+            // Try to find the player in online players first (non-blocking)
+            org.bukkit.entity.Player online = Bukkit.getPlayer(entry.getKey());
+            if (online != null) {
+                name = online.getName();
+            }
+            // Fall back to cached offline player lookup by name (avoids blocking I/O)
+            if (name == null) {
+                name = entry.getKey().toString().substring(0, 8);
+            }
             int value = byKills ? entry.getValue().totalKills : entry.getValue().totalDeaths;
             String entryRaw = plugin.getMessages().getTemplates()
                 .getString("leaderboard.entry", "<gray>{pos}. {player} — {value}</gray>")
