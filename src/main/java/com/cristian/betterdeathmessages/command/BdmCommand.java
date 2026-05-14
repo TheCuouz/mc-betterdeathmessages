@@ -22,15 +22,15 @@ public class BdmCommand implements CommandExecutor {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command,
                              @NotNull String label, @NotNull String[] args) {
         if (!sender.hasPermission("bdm.admin")) {
-            ChatPrefix.error(sender, identity, "No tienes permiso.");
+            ChatPrefix.error(sender, identity, plugin.getMessages().get("command.no-permission"));
             return true;
         }
         if (args.length >= 1 && args[0].equalsIgnoreCase("reload")) {
             plugin.reload();
-            ChatPrefix.success(sender, identity, "BetterDeathMessages recargado.");
+            ChatPrefix.success(sender, identity, plugin.getMessages().get("command.reload-success"));
             return true;
         }
-        ChatPrefix.warn(sender, identity, "Uso: /bdm reload");
+        ChatPrefix.warn(sender, identity, plugin.getMessages().get("command.usage-bdm"));
         return true;
     }
 }

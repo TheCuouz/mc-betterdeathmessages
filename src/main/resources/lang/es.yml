@@ -1,0 +1,67 @@
+# BetterDeathMessages — castellano
+# Todos los strings son MiniMessage. El prefijo de chat lo añade el SDK
+# automáticamente — no hace falta <prefix> aquí.
+# El token {last_words} se reemplaza por el último mensaje público del jugador.
+# Si no hay mensaje en caché, se usa last-words.fallback de config.yml.
+
+# ── Feedback de comandos ──────────────────────────────────────────────────────
+command:
+  no-permission: "No tienes permiso."
+  reload-success: "BetterDeathMessages recargado."
+  usage-bdm: "Uso: /bdm reload"
+  player-not-found: "Jugador no encontrado: {player}"
+  usage-deaths: "Uso: /deaths <jugador>"
+
+# ── Hover de stats / comando /deaths ─────────────────────────────────────────
+stats:
+  header: "<gold>{player} — Stats</gold>"
+  total-deaths: "<yellow>Muertes totales: <white>{value}</white></yellow>"
+  kills: "<yellow>Asesinatos: <white>{value}</white></yellow>"
+  kdr: "<yellow>KDR: <white>{value}</white></yellow>"
+  kill-streak-max: "<yellow>Racha máxima: <white>{value}</white></yellow>"
+  kill-streak-current: "<yellow>Racha actual: <white>{value}</white></yellow>"
+  deaths-header: "<gold>══ Stats de <white>{player}</white> ══</gold>"
+
+# ── Primera muerte del día ────────────────────────────────────────────────────
+first-death-of-day:
+  message: "<gold>¡{player}</gold> <yellow>tiene el honor de morir primero hoy!</yellow>"
+
+# ── Plantillas de muerte ──────────────────────────────────────────────────────
+# Cada categoría es una lista; se elige una al azar en cada muerte.
+# Tokens disponibles: {player}, {killer}, {weapon}, {mob}, {distance}, {biome}, {last_words}
+messages:
+  fall:
+    - "<red>{player}</red> <gray>descubrió que la gravedad no negocia</gray>"
+    - "<red>{player}</red> <gray>falló su examen de paracaidismo desde</gray> <yellow>{distance}</yellow> <gray>bloques</gray>"
+  lava:
+    - "<red>{player}</red> <gray>se convirtió en parte del paisaje volcánico</gray>"
+    - "<red>{player}</red> <gray>decidió nadar en lava... una sola vez</gray>"
+  drown:
+    - "<red>{player}</red> <gray>recordó tarde que no es un pez</gray>"
+    - "<red>{player}</red> <gray>olvidó que respirar bajo el agua no es una habilidad humana</gray>"
+  void:
+    - "<red>{player}</red> <gray>exploró la nada eterna</gray>"
+    - "<red>{player}</red> <gray>se convenció de que el abismo era una piscina</gray>"
+  pvp:
+    - "<red>{player}</red> <gray>fue derrotado por</gray> <gold>{killer}</gold> <gray>usando</gray> <aqua>{weapon}</aqua>"
+    - "<gold>{killer}</gold> <gray>demostró su superioridad sobre</gray> <red>{player}</red>"
+    - "<red>{player}</red> <gray>subestimó el poder de</gray> <gold>{killer}</gold>"
+  mob:
+    ZOMBIE:
+      - "<red>{player}</red> <gray>alimentó a un zombie hambriento</gray>"
+    SKELETON:
+      - "<red>{player}</red> <gray>recibió un flechazo... pero no de amor</gray>"
+    CREEPER:
+      - "<red>{player}</red> <gray>hizo amistad con un creeper. Solo una vez</gray>"
+    SPIDER:
+      - "<red>{player}</red> <gray>olvidó que las arañas también pican</gray>"
+    ENDER_DRAGON:
+      - "<dark_purple>{player}</dark_purple> <gray>osó desafiar al dragón... y perdió</gray>"
+      - "<dark_purple>El Dragón del End</dark_purple> <gray>reclamó el alma de</gray> <dark_purple>{player}</dark_purple>"
+    WITHER:
+      - "<dark_gray>{player}</dark_gray> <gray>fue consumido por el Wither</gray>"
+    DEFAULT:
+      - "<red>{player}</red> <gray>fue derrotado por un</gray> <gray>{mob}</gray>"
+  unknown:
+    - "<red>{player}</red> <gray>murió de formas misteriosas</gray>"
+    - "<red>{player}</red> <gray>encontró el fin de su aventura</gray>"

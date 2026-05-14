@@ -1,3 +1,5 @@
+> 🌐 **English** · [Español](es/Instalacion.md)
+
 # 📦 Installation
 
 This page walks you through getting **BetterDeathMessages** running on your Paper server from zero to operational.
