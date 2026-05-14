@@ -8,6 +8,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
@@ -94,6 +95,46 @@ public class DeathListener implements Listener {
         }
 
         event.deathMessage(message);
+
+        // Radius-filtered broadcast
+        int broadcastRadius = plugin.getConfigManager().broadcastRadius();
+        if (broadcastRadius > 0) {
+            // Override Paper's global broadcast with a radius-limited one
+            event.deathMessage(null);
+            Location deathLoc = victim.getLocation();
+            Component finalMsg = message;
+            for (Player online : Bukkit.getOnlinePlayers()) {
+                if (online.getWorld().equals(deathLoc.getWorld())
+                        && online.getLocation().distanceSquared(deathLoc) <= (long) broadcastRadius * broadcastRadius) {
+                    online.sendMessage(finalMsg);
+                }
+            }
+        }
+
+        // Death sound to nearby players
+        if (plugin.getConfigManager().deathSoundEnabled()) {
+            String soundName = plugin.getConfigManager().deathSoundType();
+            float volume = plugin.getConfigManager().deathSoundVolume();
+            float pitch  = plugin.getConfigManager().deathSoundPitch();
+            int soundRadius = plugin.getConfigManager().deathSoundRadius();
+            Location deathLoc = victim.getLocation();
+            org.bukkit.Sound sound = null;
+            try {
+                sound = org.bukkit.Sound.valueOf(soundName);
+            } catch (IllegalArgumentException e) {
+                plugin.getSLF4JLogger().warn("Invalid death-sound.sound value: {}", soundName);
+            }
+            if (sound != null) {
+                final org.bukkit.Sound finalSound = sound;
+                final Location finalLoc = deathLoc;
+                for (Player online : Bukkit.getOnlinePlayers()) {
+                    if (online.getWorld().equals(finalLoc.getWorld())
+                            && online.getLocation().distanceSquared(finalLoc) <= (long) soundRadius * soundRadius) {
+                        online.playSound(finalLoc, finalSound, volume, pitch);
+                    }
+                }
+            }
+        }
 
         final Player finalKiller   = playerKiller;
         final String finalCategory = category;
