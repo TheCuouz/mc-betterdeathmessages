@@ -35,14 +35,15 @@ public class DeathsCommand implements CommandExecutor {
         if (args.length >= 1) {
             OfflinePlayer op = Bukkit.getOfflinePlayerIfCached(args[0]);
             if (op == null) {
-                ChatPrefix.error(sender, identity, "Jugador no encontrado: " + args[0]);
+                ChatPrefix.error(sender, identity,
+                    plugin.getMessages().get("command.player-not-found", "player", args[0]));
                 return true;
             }
             target     = op.getUniqueId();
             targetName = op.getName() != null ? op.getName() : args[0];
         } else {
             if (!(sender instanceof Player player)) {
-                ChatPrefix.warn(sender, identity, "Uso: /deaths <jugador>");
+                ChatPrefix.warn(sender, identity, plugin.getMessages().get("command.usage-deaths"));
                 return true;
             }
             target     = player.getUniqueId();
@@ -53,12 +54,12 @@ public class DeathsCommand implements CommandExecutor {
         double kdr = (double) stats.totalKills / Math.max(1, stats.totalDeaths);
 
         ChatPrefix.send(sender, identity,
-            "<gold>══ Stats de <white>" + targetName + "</white> ══</gold>\n" +
-            "<yellow>Muertes totales: <white>" + stats.totalDeaths + "</white></yellow>\n" +
-            "<yellow>Asesinatos:      <white>" + stats.totalKills  + "</white></yellow>\n" +
-            "<yellow>KDR:             <white>" + String.format("%.2f", kdr) + "</white></yellow>\n" +
-            "<yellow>Racha actual:    <white>" + stats.currentKillStreak  + "</white></yellow>\n" +
-            "<yellow>Racha máxima:    <white>" + stats.longestKillStreak + "</white></yellow>"
+            plugin.getMessages().get("stats.deaths-header", "player", targetName) + "\n" +
+            plugin.getMessages().get("stats.total-deaths",  "value", String.valueOf(stats.totalDeaths)) + "\n" +
+            plugin.getMessages().get("stats.kills",         "value", String.valueOf(stats.totalKills))  + "\n" +
+            plugin.getMessages().get("stats.kdr",           "value", String.format("%.2f", kdr))        + "\n" +
+            plugin.getMessages().get("stats.kill-streak-current", "value", String.valueOf(stats.currentKillStreak)) + "\n" +
+            plugin.getMessages().get("stats.kill-streak-max",     "value", String.valueOf(stats.longestKillStreak))
         );
         return true;
     }

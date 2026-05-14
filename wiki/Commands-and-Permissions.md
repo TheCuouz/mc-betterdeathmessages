@@ -1,3 +1,5 @@
+> 🌐 **English** · [Español](es/Comandos-y-Permisos.md)
+
 # 🎮 Commands & Permissions
 
 BetterDeathMessages exposes two commands: **`/deaths`** for everyone, and **`/bdm`** for admins.

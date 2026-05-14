@@ -1,20 +1,44 @@
 # BetterDeathMessages Configuration
-# Message templates are in messages.yml
-config-version: 2
+# Death message templates and UI strings are in lang/es.yml (or the active locale).
+config-version: 3
+
+# Active language. ISO-639-1 two-letter code (lowercase).
+# Bundled out of the box: es (Spanish), en (English).
+# Missing keys fall back to en automatically. Operators can drop extra
+# lang/<code>.yml files in plugins/BetterDeathMessages/lang/.
+language: es
 
 # ============================================================
 # LAST WORDS  (v1.1.0)
 # ============================================================
 # Captura el último mensaje público de un jugador y lo inyecta
-# en el death message via el token {last_words} en messages.yml.
+# en el death message via el token {last_words} en lang/<locale>.yml.
 #
 # Solo captura chat público — whispers y canales privados se
 # descartan (no entran a la cache). El mensaje cacheado se borra
 # automáticamente tras cache-seconds.
 #
-# Para usarlo, edita tus templates en messages.yml para incluir
+# Para usarlo, edita tus templates en lang/<locale>.yml para incluir
 # {last_words} donde quieras la cita.
 last-words:
   enabled: true
   cache-seconds: 60
   fallback: ""
+
+# ============================================================
+# GLOBAL BROADCAST
+# ============================================================
+# Deaths from these causes are broadcast to all online players.
+# Valid values: pvp, ENDER_DRAGON, WITHER (or any EntityType name).
+# hover-stats = true adds a hover tooltip with the victim's KDR.
+global-broadcast:
+  enabled-causes: [ENDER_DRAGON, WITHER, pvp]
+  hover-stats: true
+
+# ============================================================
+# FIRST DEATH OF THE DAY
+# ============================================================
+# Broadcasts a special message for the first player to die each day.
+# The message template lives in lang/<locale>.yml under first-death-of-day.message.
+first-death-of-day:
+  enabled: true

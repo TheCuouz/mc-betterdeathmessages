@@ -1,3 +1,5 @@
+> 🌐 **English** · [Español](es/Configuracion.md)
+
 # ⚙️ Configuration
 
 All death templates and broadcast settings live in **`plugins/BetterDeathMessages/messages.yml`**. After editing, apply changes with `/bdm reload` — no restart required.

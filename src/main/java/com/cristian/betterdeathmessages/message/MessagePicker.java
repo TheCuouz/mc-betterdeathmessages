@@ -12,23 +12,38 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
+/**
+ * Picks a random death message template from the active locale's
+ * {@code lang/<locale>.yml} (exposed via {@link com.cristian.betterdeathmessages.cfg.MessageManager#getTemplates()}).
+ *
+ * <p>Template YAML structure (flat list per category):</p>
+ * <pre>
+ * messages:
+ *   fall:
+ *     - "&lt;red&gt;{player}&lt;/red&gt; died ..."
+ *   mob:
+ *     ZOMBIE:
+ *       - "..."
+ * </pre>
+ */
 public class MessagePicker {
 
     private static final MiniMessage MM = MiniMessage.miniMessage();
     private static final Random RANDOM = new Random();
 
-    private final FileConfiguration messages;
+    /** The {@code lang/<locale>.yml} loaded as a FileConfiguration. */
+    private final FileConfiguration templates;
     private final FileConfiguration pluginConfig;
     private final LastWordsCache lastWordsCache;
 
-    public MessagePicker(FileConfiguration messages) {
-        this(messages, null, null);
+    public MessagePicker(FileConfiguration templates) {
+        this(templates, null, null);
     }
 
-    public MessagePicker(FileConfiguration messages,
+    public MessagePicker(FileConfiguration templates,
                          FileConfiguration pluginConfig,
                          LastWordsCache lastWordsCache) {
-        this.messages = messages;
+        this.templates = templates;
         this.pluginConfig = pluginConfig;
         this.lastWordsCache = lastWordsCache;
     }
@@ -41,18 +56,18 @@ public class MessagePicker {
             ctx.cause().name()
         );
 
-        List<String> templates = getTemplates(category);
-        if (templates.isEmpty()) templates = messages.getStringList("messages.unknown");
-        if (templates.isEmpty()) return Component.text(ctx.victim().getName() + " died.");
+        List<String> templateList = getTemplates(category);
+        if (templateList.isEmpty()) templateList = templates.getStringList("messages.unknown");
+        if (templateList.isEmpty()) return Component.text(ctx.victim().getName() + " died.");
 
-        String template = templates.get(RANDOM.nextInt(templates.size()));
+        String template = templateList.get(RANDOM.nextInt(templateList.size()));
         String rendered = template
-            .replace("<player>",     ctx.victim().getName())
-            .replace("<killer>",     ctx.playerKiller() != null ? ctx.playerKiller().getName() : "")
-            .replace("<weapon>",     weaponName(ctx.weapon()))
-            .replace("<mob>",        ctx.mobKiller() != null ? formatMob(ctx.mobKiller().getType().name()) : "")
-            .replace("<distance>",   String.format("%.0f", ctx.fallDistance()))
-            .replace("<biome>",      ctx.biome())
+            .replace("{player}",     ctx.victim().getName())
+            .replace("{killer}",     ctx.playerKiller() != null ? ctx.playerKiller().getName() : "")
+            .replace("{weapon}",     weaponName(ctx.weapon()))
+            .replace("{mob}",        ctx.mobKiller() != null ? formatMob(ctx.mobKiller().getType().name()) : "")
+            .replace("{distance}",   String.format("%.0f", ctx.fallDistance()))
+            .replace("{biome}",      ctx.biome())
             .replace("{last_words}", resolveLastWords(ctx));
 
         return MM.deserialize(rendered);
@@ -76,15 +91,15 @@ public class MessagePicker {
     private List<String> getTemplates(String category) {
         if (category.startsWith("mob.")) {
             String mobType = category.substring(4);
-            List<String> specific = messages.getStringList("messages.mob." + mobType);
+            List<String> specific = templates.getStringList("messages.mob." + mobType);
             if (!specific.isEmpty()) return specific;
-            return messages.getStringList("messages.mob.DEFAULT");
+            return templates.getStringList("messages.mob.DEFAULT");
         }
-        return messages.getStringList("messages." + category);
+        return templates.getStringList("messages." + category);
     }
 
     private String weaponName(ItemStack item) {
-        if (item == null || item.getType().isAir()) return "manos";
+        if (item == null || item.getType().isAir()) return "";
         if (item.hasItemMeta() && item.getItemMeta().hasDisplayName()) {
             return PlainTextComponentSerializer.plainText()
                 .serialize(item.getItemMeta().displayName());
