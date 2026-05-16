@@ -86,7 +86,7 @@ public final class BetterDeathMessagesPlugin extends JavaPlugin {
             new PapiHook(this).register();
         }
 
-        new Metrics(this, 12347);
+        new Metrics(this, 31359);
 
         int templateCount = countDeathTemplates();
 
