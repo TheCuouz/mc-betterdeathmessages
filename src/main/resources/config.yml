@@ -11,15 +11,15 @@ language: en
 # ============================================================
 # LAST WORDS  (v1.1.0)
 # ============================================================
-# Captura el último mensaje público de un jugador y lo inyecta
-# en el death message via el token {last_words} en lang/<locale>.yml.
+# Captures a player's last public message and drops it into the death
+# message through the {last_words} token in lang/<locale>.yml.
 #
-# Solo captura chat público — whispers y canales privados se
-# descartan (no entran a la cache). El mensaje cacheado se borra
-# automáticamente tras cache-seconds.
+# Public chat only — whispers and private channels are ignored and never
+# reach the cache. A cached message is cleared automatically after
+# cache-seconds.
 #
-# Para usarlo, edita tus templates en lang/<locale>.yml para incluir
-# {last_words} donde quieras la cita.
+# To use it, edit your templates in lang/<locale>.yml and put
+# {last_words} wherever you want the quote to appear.
 last-words:
   enabled: true
   cache-seconds: 60

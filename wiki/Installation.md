@@ -51,8 +51,10 @@ Start or restart your server. BetterDeathMessages generates its data directory a
 
 ```
 plugins/BetterDeathMessages/
-├── config.yml      ← (currently only version pin)
-├── messages.yml    ← all 21+ death templates — edit this
+├── config.yml      ← language, last words, broadcasts, kill streaks, sounds, radius
+├── lang/
+│   ├── es.yml       ← 110+ death templates (Spanish) — edit this
+│   └── en.yml       ← 110+ death templates (English)
 └── deaths.json     ← auto-created on first death; persistent stats
 ```
 

@@ -25,7 +25,7 @@ Part of the **TTS-Studio plugin suite** — built around a shared SDK for consis
 
 | Feature | Description |
 |---------|-------------|
-| 📜 **21+ Death Templates** | Mob-aware, cause-aware narrative messages — gravity, lava, drowning, void, PvP, and per-mob variants |
+| 📜 **110+ Death Templates** | Mob-aware, cause-aware narrative messages — gravity, lava, drowning, void, PvP, and 42 per-mob variants |
 | 🎨 **MiniMessage Styling** | Full color, gradient, and decoration support via the Adventure API |
 | 📊 **Persistent Kill/Death Stats** | `totalKills`, `totalDeaths`, `currentKillStreak`, `longestKillStreak`, per-category death breakdown |
 | 🔍 **Hover Stats on Broadcasts** | Hover any global broadcast to see the victim's full panel |
@@ -49,7 +49,7 @@ cp betterdeathmessages-1.0.0.jar plugins/
 /bdm reload
 ```
 
-That's it. The plugin works out of the box with 21+ pre-written templates.
+That's it. The plugin works out of the box with 110+ pre-written templates.
 
 ---
 
