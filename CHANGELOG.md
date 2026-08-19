@@ -33,9 +33,9 @@ All notable changes to BetterDeathMessages are documented here.
 ## [1.0.0] - 2026-05-10
 
 ### Added
-- Initial release with 21 narrative death message templates across
-  categories: fall, lava, drown, void, pvp, and per-mob with
-  DEFAULT fallback.
+- Initial release with 110+ narrative death message templates across
+  17 cause categories (fall, lava, fire, drown, void, explosion, magic,
+  lightning, and more) plus 42 per-mob categories with a DEFAULT fallback.
 - Random template selection per category.
 - Hover stats on notable deaths (ENDER_DRAGON, WITHER, pvp) showing
   total deaths, kills, KDR, and longest killstreak.
@@ -45,4 +45,4 @@ All notable changes to BetterDeathMessages are documented here.
 - `/bdm reload` admin command.
 - PlaceholderAPI expansion (`%bdm_deaths_total%`, `%bdm_kills%`,
   `%bdm_kdr%`, `%bdm_killstreak%`).
-- bStats metrics (plugin ID 12347).
+- bStats metrics (plugin ID 31359).

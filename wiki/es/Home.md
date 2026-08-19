@@ -25,7 +25,7 @@ Parte de la **suite de plugins TTS-Studio** — construida sobre un SDK comparti
 
 | Característica | Descripción |
 |----------------|-------------|
-| 📜 **21+ Plantillas de Muerte** | Mensajes narrativos conscientes del mob y la causa — gravedad, lava, ahogamiento, vacío, PvP y variantes por mob |
+| 📜 **110+ Plantillas de Muerte** | Mensajes narrativos conscientes del mob y la causa — gravedad, lava, ahogamiento, vacío, PvP y 42 variantes por mob |
 | 🎨 **Estilo MiniMessage** | Soporte completo de color, gradiente y decoración mediante la Adventure API |
 | 📊 **Estadísticas Persistentes de Kills/Muertes** | `totalKills`, `totalDeaths`, `currentKillStreak`, `longestKillStreak`, desglose de muertes por categoría |
 | 🔍 **Stats en Hover de Transmisiones** | Pasa el cursor por cualquier transmisión global para ver el panel completo de la víctima |
@@ -49,7 +49,7 @@ cp betterdeathmessages-1.0.0.jar plugins/
 /bdm reload
 ```
 
-Eso es todo. El plugin funciona de inmediato con 21+ plantillas preescritas.
+Eso es todo. El plugin funciona de inmediato con 110+ plantillas preescritas.
 
 ---
 

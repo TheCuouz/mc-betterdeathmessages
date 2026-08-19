@@ -51,8 +51,10 @@ Inicia o reinicia tu servidor. BetterDeathMessages genera su directorio de datos
 
 ```
 plugins/BetterDeathMessages/
-├── config.yml      ← (actualmente solo fija la versión de configuración)
-├── messages.yml    ← todas las 21+ plantillas de muerte — edita este archivo
+├── config.yml      ← idioma, últimas palabras, broadcasts, rachas, sonidos, radio
+├── lang/
+│   ├── es.yml       ← 110+ plantillas de muerte (español) — edita este archivo
+│   └── en.yml       ← 110+ plantillas de muerte (inglés)
 └── deaths.json     ← se crea automáticamente con la primera muerte; estadísticas persistentes
 ```
 
