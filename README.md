@@ -25,7 +25,7 @@
 
 > 🌐 **English** · [Español](README.es.md)
 
-> **Narrative death messages for Paper 1.21.x** — Replaces vanilla one-liners with a configurable library of MiniMessage templates split by cause (fall, lava, drown, void, pvp, per-mob), plus hover stats, daily broadcasts, persistent stats, and Last Words.
+> **Narrative death messages for Paper 1.21.x** — Replaces vanilla one-liners with a configurable library of MiniMessage templates split by cause (fall, lava, drown, void, pvp, per-mob, and many more), plus hover stats, daily broadcasts, persistent stats, and Last Words.
 
 > 🏷️ Brought to you by **[TTS-Studio](https://github.com/TheCuouz)** — part of the unified TTS-Studio plugin suite.
 
@@ -35,12 +35,12 @@
 
 | Feature | Description |
 |---------|-------------|
-| 📝 **21 default templates** | Spread across `fall`, `lava`, `drown`, `void`, `pvp`, and per-mob categories (`ZOMBIE`, `SKELETON`, `CREEPER`, `SPIDER`, `ENDER_DRAGON`, `WITHER`, with `DEFAULT` fallback). |
+| 📝 **110+ default templates** | Spread across 17 cause categories (`fall`, `lava`, `fire`, `drown`, `void`, `explosion`, `magic`, `lightning`, `cramming`, `freeze`, `suffocation`, `cactus`, `sonic_boom`, `starvation`, `poison`, `wither_effect`, `pvp`) plus 42 per-mob categories (`ZOMBIE`, `SKELETON`, `CREEPER`, `SPIDER`, `ENDER_DRAGON`, `WITHER`, …) with a `DEFAULT` fallback. |
 | 🎲 **Random template selection** | One template is picked at random from its category — no two deaths read the same. |
 | 💬 **Last Words** | The player's last public chat message is woven into their death message via the `{last_words}` token. |
 | 🖱️ **Hover stats** | Notable deaths (ENDER_DRAGON, WITHER, pvp) show a hover card with total deaths, kills, KDR, and longest killstreak. |
 | 📢 **First-death-of-day broadcast** | Special announcement for the first death each day, with automatic midnight reset. |
-| 💾 **Persistent player stats** | Deaths, kills, killstreaks, and KDR stored in SQLite via HikariCP. |
+| 💾 **Persistent player stats** | Deaths, kills, killstreaks, and KDR persisted per-UUID to a local `deaths.json` (Gson). |
 | 📊 **PlaceholderAPI** | `%bdm_deaths_total%`, `%bdm_kills%`, `%bdm_kdr%`, `%bdm_killstreak%`. |
 | 🎨 **TTS-Studio house style** | Suite-wide chat prefix and framed boot banner — feels like one product. |
 | 📈 **bStats** | Anonymous usage metrics. |
@@ -51,13 +51,13 @@
 
 ```bash
 # 1. Drop the jar into your plugins folder
-cp betterdeathmessages-1.1.0.jar plugins/
+cp betterdeathmessages-1.1.1.jar plugins/
 
 # 2. Restart the server
-#    Default config.yml and messages.yml are written on first enable.
+#    Default config.yml and lang/<locale>.yml files are written on first enable.
 
 # 3. Customize your death message templates
-nano plugins/BetterDeathMessages/messages.yml
+nano plugins/BetterDeathMessages/lang/en.yml
 
 # 4. Hot-reload after any YAML edit — no restart needed
 /bdm reload
@@ -72,9 +72,10 @@ nano plugins/BetterDeathMessages/messages.yml
 The plugin remembers each player's most recent public chat line for a short, configurable window. When that player dies, the `{last_words}` token in their death template is replaced by what they said.
 
 ```yaml
-# messages.yml
-fall:
-  - "<gray><player> fell to their doom. Last words: <italic>\"{last_words}\"</italic></gray>"
+# lang/<locale>.yml
+messages:
+  fall:
+    - "<gray>{player} fell to their doom. Last words: <italic>\"{last_words}\"</italic></gray>"
 ```
 
 > **Privacy.** Last Words only captures chat that reaches the full online roster — i.e. true public chat. Messages routed through ChatChannels or other channel plugins (`#trade`, staff chat, party chat), whispers, and `/msg` **never** enter the cache. The listener runs at `MONITOR` priority with `ignoreCancelled = true`, so it sees the final audience after every other plugin has had its say. Cached messages are dropped after `cache-seconds` (default 60s) and the cache lives only in memory — nothing is written to disk.
@@ -92,9 +93,9 @@ last-words:
 
 ## 📦 What's in the box
 
-- A **`messages.yml`** with 21 ready-to-use death message templates across 6 cause categories, all MiniMessage-formatted.
-- A **`config.yml`** with inline comments covering Last Words, hover stats, first-death broadcasts, and bStats opt-out.
-- **Persistent player stats** tracked per UUID in SQLite — no manual setup required.
+- A **`lang/<locale>.yml`** with 110+ ready-to-use death message templates across 17 cause categories plus 42 per-mob categories, all MiniMessage-formatted (bundled `es` and `en`).
+- A **`config.yml`** with inline comments covering Last Words, hover stats, first-death broadcasts, kill streaks, first blood, death sounds, broadcast radius, and bStats opt-out.
+- **Persistent player stats** tracked per UUID in a local `deaths.json` (Gson) — no manual setup required.
 
 ---
 
@@ -103,7 +104,7 @@ last-words:
 | Command | Description | Permission | Default |
 |---------|-------------|------------|---------|
 | `/deaths [player]` | View a player's death stats | `bdm.use` | `true` |
-| `/bdm reload` | Hot-reload `messages.yml` and `config.yml` | `bdm.admin` | `op` |
+| `/bdm reload` | Hot-reload `lang/<locale>.yml` and `config.yml` | `bdm.admin` | `op` |
 
 ---
 
@@ -130,33 +131,35 @@ PlaceholderAPI is auto-detected on enable; placeholders silently no-op when the 
 
 ### Available tokens
 
-These are substituted inside any template in `messages.yml`:
+These are substituted inside any template in `lang/<locale>.yml`:
 
 | Token | Replaced with |
 |-------|---------------|
-| `<player>` | Victim's name |
-| `<killer>` | Killer's name (PvP only; empty otherwise) |
-| `<weapon>` | Weapon used (custom display name if set) |
-| `<mob>` | Mob type (mob deaths only) |
-| `<distance>` | Fall distance in blocks |
-| `<biome>` | Biome at the death location |
+| `{player}` | Victim's name |
+| `{killer}` | Killer's name (PvP only; empty otherwise) |
+| `{weapon}` | Weapon used (custom display name if set) |
+| `{mob}` | Mob type (mob deaths only) |
+| `{distance}` | Fall distance in blocks |
+| `{biome}` | Biome at the death location |
+| `{x}` / `{y}` / `{z}` | Death coordinates |
+| `{dimension}` | Dimension (`overworld`, `nether`, `the_end`) |
 | `{last_words}` | Player's last public chat message (or `fallback`) |
 
-### messages.yml excerpt
+### lang/<locale>.yml excerpt
 
 ```yaml
 messages:
   pvp:
-    - "<red><player></red> was defeated by <gold><killer></gold> using <aqua><weapon></aqua>"
-    - "<gray><player> met their end at the hands of <gold><killer></gold></gray>"
+    - "<red>{player}</red> was defeated by <gold>{killer}</gold> using <aqua>{weapon}</aqua>"
+    - "<gray>{player} met their end at the hands of <gold>{killer}</gold></gray>"
   fall:
-    - "<gray><player> fell to their doom. Last words: <italic>\"{last_words}\"</italic></gray>"
-    - "<yellow><player> didn't stick the landing.</yellow>"
+    - "<gray>{player} fell to their doom. Last words: <italic>\"{last_words}\"</italic></gray>"
+    - "<yellow>{player} didn't stick the landing.</yellow>"
   mob:
     ENDER_DRAGON:
-      - "<dark_purple><player></dark_purple> dared to challenge the dragon... and lost"
+      - "<dark_purple>{player}</dark_purple> dared to challenge the dragon... and lost"
     DEFAULT:
-      - "<red><player></red> was slain by a <mob>"
+      - "<red>{player}</red> was slain by a {mob}"
 
 global-broadcast:
   enabled-causes: [ENDER_DRAGON, WITHER, pvp]
@@ -186,7 +189,7 @@ Open an issue with:
 
 - BetterDeathMessages version (`/version BetterDeathMessages`)
 - Server type and version (Paper build, Java version)
-- A minimal `messages.yml` excerpt that reproduces the issue
+- A minimal `lang/<locale>.yml` excerpt that reproduces the issue
 - Server log excerpt — especially the stack trace if there is one
 
 > Internal note: production support is tracked on the TTS-Studio issue board.

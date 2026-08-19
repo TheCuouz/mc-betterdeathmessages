@@ -25,7 +25,7 @@
 
 > 🌐 [English](README.md) · **Español**
 
-> **Mensajes de muerte narrativos para Paper 1.21.x** — Reemplaza los mensajes de una línea de la vanilla con una librería configurable de plantillas MiniMessage divididas por causa (caída, lava, ahogamiento, vacío, pvp, por mob), más stats en hover, broadcasts diarios, stats persistentes y Últimas Palabras.
+> **Mensajes de muerte narrativos para Paper 1.21.x** — Reemplaza los mensajes de una línea de la vanilla con una librería configurable de plantillas MiniMessage divididas por causa (caída, lava, ahogamiento, vacío, pvp, por mob y muchas más), más stats en hover, broadcasts diarios, stats persistentes y Últimas Palabras.
 
 > 🏷️ Hecho por **[TTS-Studio](https://github.com/TheCuouz)** — parte de la suite unificada de plugins TTS-Studio.
 
@@ -35,12 +35,12 @@
 
 | Funcionalidad | Descripción |
 |---------------|-------------|
-| 📝 **21 plantillas por defecto** | Distribuidas entre las categorías `fall`, `lava`, `drown`, `void`, `pvp` y por mob (`ZOMBIE`, `SKELETON`, `CREEPER`, `SPIDER`, `ENDER_DRAGON`, `WITHER`, con fallback `DEFAULT`). |
+| 📝 **110+ plantillas por defecto** | Distribuidas entre 17 categorías de causa (`fall`, `lava`, `fire`, `drown`, `void`, `explosion`, `magic`, `lightning`, `cramming`, `freeze`, `suffocation`, `cactus`, `sonic_boom`, `starvation`, `poison`, `wither_effect`, `pvp`) más 42 categorías por mob (`ZOMBIE`, `SKELETON`, `CREEPER`, `SPIDER`, `ENDER_DRAGON`, `WITHER`, …) con un fallback `DEFAULT`. |
 | 🎲 **Selección aleatoria de plantillas** | Se elige una plantilla al azar de su categoría — ninguna muerte se leerá igual dos veces. |
 | 💬 **Últimas Palabras** | El último mensaje público del jugador se incorpora a su mensaje de muerte mediante el token `{last_words}`. |
 | 🖱️ **Stats en hover** | Las muertes notables (ENDER_DRAGON, WITHER, pvp) muestran una tarjeta hover con muertes totales, kills, KDR y racha máxima. |
 | 📢 **Broadcast de primera muerte del día** | Anuncio especial para la primera muerte de cada día, con reset automático a medianoche. |
-| 💾 **Stats persistentes** | Muertes, kills, rachas y KDR almacenados en SQLite vía HikariCP. |
+| 💾 **Stats persistentes** | Muertes, kills, rachas y KDR persistidos por UUID en un `deaths.json` local (Gson). |
 | 📊 **PlaceholderAPI** | `%bdm_deaths_total%`, `%bdm_kills%`, `%bdm_kdr%`, `%bdm_killstreak%`. |
 | 🎨 **Estilo TTS-Studio** | Prefijo de chat de la suite y banner de consola enmarcado — se siente como un solo producto. |
 | 📈 **bStats** | Métricas de uso anónimas. |
@@ -51,13 +51,13 @@
 
 ```bash
 # 1. Coloca el jar en tu carpeta de plugins
-cp betterdeathmessages-1.1.0.jar plugins/
+cp betterdeathmessages-1.1.1.jar plugins/
 
 # 2. Reinicia el servidor
-#    config.yml y messages.yml por defecto se generan al primer arranque.
+#    config.yml y los lang/<locale>.yml por defecto se generan al primer arranque.
 
 # 3. Personaliza tus plantillas de mensajes de muerte
-nano plugins/BetterDeathMessages/messages.yml
+nano plugins/BetterDeathMessages/lang/es.yml
 
 # 4. Recarga en caliente tras cualquier cambio en los YAML — sin reinicio
 /bdm reload
@@ -72,9 +72,10 @@ nano plugins/BetterDeathMessages/messages.yml
 El plugin recuerda la última línea de chat público de cada jugador durante una ventana corta y configurable. Cuando ese jugador muere, el token `{last_words}` en su plantilla de muerte se reemplaza por lo que dijo.
 
 ```yaml
-# messages.yml
-fall:
-  - "<gray><player> cayó a su perdición. Últimas palabras: <italic>\"{last_words}\"</italic></gray>"
+# lang/<locale>.yml
+messages:
+  fall:
+    - "<gray>{player} cayó a su perdición. Últimas palabras: <italic>\"{last_words}\"</italic></gray>"
 ```
 
 > **Privacidad.** Últimas Palabras solo captura el chat que llega a todos los jugadores online — es decir, el chat público verdadero. Los mensajes enrutados a través de ChatChannels u otros plugins de canales (`#trade`, chat de staff, chat de party), los susurros y `/msg` **nunca** entran en la caché. El listener se ejecuta con prioridad `MONITOR` e `ignoreCancelled = true`, por lo que ve la audiencia final tras que todos los demás plugins hayan tenido su turno. Los mensajes en caché se eliminan tras `cache-seconds` (por defecto 60 s) y la caché solo vive en memoria — nada se escribe en disco.
@@ -92,9 +93,9 @@ last-words:
 
 ## 📦 Qué incluye
 
-- Un **`messages.yml`** con 21 plantillas de mensajes de muerte listas para usar en 6 categorías de causa, todas formateadas con MiniMessage.
-- Un **`config.yml`** con comentarios en línea que cubren Últimas Palabras, stats en hover, broadcasts de primera muerte y opt-out de bStats.
-- **Stats de jugador persistentes** rastreados por UUID en SQLite — sin configuración manual necesaria.
+- Un **`lang/<locale>.yml`** con 110+ plantillas de mensajes de muerte listas para usar en 17 categorías de causa más 42 categorías por mob, todas formateadas con MiniMessage (incluye `es` y `en`).
+- Un **`config.yml`** con comentarios en línea que cubren Últimas Palabras, stats en hover, broadcasts de primera muerte, rachas de kills, primera sangre, sonidos de muerte, radio de broadcast y opt-out de bStats.
+- **Stats de jugador persistentes** rastreados por UUID en un `deaths.json` local (Gson) — sin configuración manual necesaria.
 
 ---
 
@@ -103,7 +104,7 @@ last-words:
 | Comando | Descripción | Permiso | Por defecto |
 |---------|-------------|---------|-------------|
 | `/deaths [jugador]` | Ver las stats de muerte de un jugador | `bdm.use` | `true` |
-| `/bdm reload` | Recarga en caliente `messages.yml` y `config.yml` | `bdm.admin` | `op` |
+| `/bdm reload` | Recarga en caliente `lang/<locale>.yml` y `config.yml` | `bdm.admin` | `op` |
 
 ---
 
@@ -130,33 +131,35 @@ PlaceholderAPI se detecta automáticamente al arrancar; los placeholders no hace
 
 ### Tokens disponibles
 
-Estos se sustituyen dentro de cualquier plantilla en `messages.yml`:
+Estos se sustituyen dentro de cualquier plantilla en `lang/<locale>.yml`:
 
 | Token | Se reemplaza por |
 |-------|-----------------|
-| `<player>` | Nombre de la víctima |
-| `<killer>` | Nombre del asesino (solo PvP; vacío en caso contrario) |
-| `<weapon>` | Arma usada (nombre de display personalizado si está definido) |
-| `<mob>` | Tipo de mob (solo muertes por mob) |
-| `<distance>` | Distancia de caída en bloques |
-| `<biome>` | Bioma en la ubicación de la muerte |
+| `{player}` | Nombre de la víctima |
+| `{killer}` | Nombre del asesino (solo PvP; vacío en caso contrario) |
+| `{weapon}` | Arma usada (nombre de display personalizado si está definido) |
+| `{mob}` | Tipo de mob (solo muertes por mob) |
+| `{distance}` | Distancia de caída en bloques |
+| `{biome}` | Bioma en la ubicación de la muerte |
+| `{x}` / `{y}` / `{z}` | Coordenadas de la muerte |
+| `{dimension}` | Dimensión (`overworld`, `nether`, `the_end`) |
 | `{last_words}` | Último mensaje de chat público del jugador (o `fallback`) |
 
-### Extracto de messages.yml
+### Extracto de lang/<locale>.yml
 
 ```yaml
 messages:
   pvp:
-    - "<red><player></red> fue derrotado por <gold><killer></gold> usando <aqua><weapon></aqua>"
-    - "<gray><player> encontró su fin a manos de <gold><killer></gold></gray>"
+    - "<red>{player}</red> fue derrotado por <gold>{killer}</gold> usando <aqua>{weapon}</aqua>"
+    - "<gray>{player} encontró su fin a manos de <gold>{killer}</gold></gray>"
   fall:
-    - "<gray><player> cayó a su perdición. Últimas palabras: <italic>\"{last_words}\"</italic></gray>"
-    - "<yellow><player> no encajó bien el aterrizaje.</yellow>"
+    - "<gray>{player} cayó a su perdición. Últimas palabras: <italic>\"{last_words}\"</italic></gray>"
+    - "<yellow>{player} no encajó bien el aterrizaje.</yellow>"
   mob:
     ENDER_DRAGON:
-      - "<dark_purple><player></dark_purple> se atrevió a desafiar al dragón... y perdió"
+      - "<dark_purple>{player}</dark_purple> se atrevió a desafiar al dragón... y perdió"
     DEFAULT:
-      - "<red><player></red> fue derrotado por un <mob>"
+      - "<red>{player}</red> fue derrotado por un {mob}"
 
 global-broadcast:
   enabled-causes: [ENDER_DRAGON, WITHER, pvp]
@@ -186,7 +189,7 @@ Abre un issue con:
 
 - Versión de BetterDeathMessages (`/version BetterDeathMessages`)
 - Tipo y versión del servidor (build de Paper, versión de Java)
-- Un extracto mínimo de `messages.yml` que reproduzca el problema
+- Un extracto mínimo de `lang/<locale>.yml` que reproduzca el problema
 - Extracto del log del servidor — especialmente el stack trace si hay uno
 
 > Nota interna: el soporte de producción se gestiona en el tablero de issues de TTS-Studio.

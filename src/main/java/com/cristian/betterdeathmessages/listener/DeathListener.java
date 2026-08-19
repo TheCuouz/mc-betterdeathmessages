@@ -35,6 +35,20 @@ public class DeathListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onDeath(PlayerDeathEvent event) {
+        // Defensive wrap: a failure while building/broadcasting the custom
+        // death message (weapon meta, biome lookup, MiniMessage parse, etc.)
+        // must never propagate out of a MONITOR handler — that would spam the
+        // console and could disrupt the death flow. On error we keep whatever
+        // death message is currently set (vanilla or already-applied custom).
+        try {
+            handleDeath(event);
+        } catch (Throwable t) {
+            plugin.getSLF4JLogger().warn(
+                "Failed to build custom death message; falling back to default.", t);
+        }
+    }
+
+    private void handleDeath(PlayerDeathEvent event) {
         Player victim = event.getEntity();
         EntityDamageEvent lastDmg = victim.getLastDamageCause();
 
@@ -181,6 +195,11 @@ public class DeathListener implements Listener {
             }
 
             plugin.getDeathStatsService().save();
+        }).exceptionally(ex -> {
+            // Disk-write or stats-update failure on the async thread must not be
+            // swallowed silently — surface it so admins can react.
+            plugin.getSLF4JLogger().warn("Failed to persist death stats asynchronously.", ex);
+            return null;
         });
 
         if (plugin.getFirstDeathTracker().isFirstTodayAndRecord(victim.getUniqueId())
