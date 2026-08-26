@@ -2,6 +2,13 @@
 
 All notable changes to BetterDeathMessages are documented here.
 
+## [1.1.2] — 2026-08-26
+
+### Changed
+- **Default interface language is English** (`language: en`), and every `config.yml` comment is
+  now in English. The build published on BuiltByBit was still shipping the Spanish default.
+
+
 ## [1.1.0] - 2026-05-14
 
 ### Added
