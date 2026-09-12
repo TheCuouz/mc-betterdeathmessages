@@ -198,7 +198,7 @@ Open an issue with:
 
 ## 📜 License
 
-BetterDeathMessages is distributed under the **TTS-Studio open-source license** as part of the SpigotMC funnel suite. See `LICENSE` for the full terms.
+Free to download and run on any server, under the **TTS-Studio Free License** (see `LICENSE`). Resale, rebranding and re-uploading elsewhere are not permitted — link to the official listing instead.
 
 ---
 
