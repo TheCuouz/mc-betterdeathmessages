@@ -1,5 +1,22 @@
 # Changelog
 
+## [1.1.4] — 2026-09-12
+
+### Fixed
+- 🚨 **The plugin did not start on a server without Vault.** `VaultHook.setup()`
+  read `Economy.class` with no guard, and resolving that class without Vault
+  installed is a `NoClassDefFoundError` in `onEnable`: BetterDeathMessages
+  disabled itself on any server that never asked for Vault. Vault is listed as a
+  **soft** dependency and the resource sells it as optional — it was mandatory.
+  The lookup now happens only after `isPluginEnabled("Vault")`.
+- **How it came out:** booting every plugin of the suite on a bare Paper 1.21.11
+  with none of the optional dependencies installed. It is the same family as the
+  one caught in TradeForge the same day, and `paper-test` hides both because it
+  has Vault and PlaceholderAPI installed.
+
+---
+
+
 All notable changes to BetterDeathMessages are documented here.
 
 ## [1.1.2] — 2026-08-26

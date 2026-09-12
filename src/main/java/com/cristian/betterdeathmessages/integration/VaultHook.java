@@ -10,6 +10,11 @@ public class VaultHook {
     private Economy economy;
 
     public boolean setup() {
+        // Reading Economy.class resolves it, and without Vault installed that is a
+        // NoClassDefFoundError in onEnable: the plugin disables itself on a server
+        // that never asked for Vault in the first place. Vault is optional; the
+        // guard is what makes it optional.
+        if (!Bukkit.getPluginManager().isPluginEnabled("Vault")) return false;
         RegisteredServiceProvider<Economy> rsp =
             Bukkit.getServicesManager().getRegistration(Economy.class);
         if (rsp == null) return false;
