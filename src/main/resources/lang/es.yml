@@ -145,10 +145,10 @@ messages:
     CAVE_SPIDER:
       - "<red>{player}</red> <gray>fue envenenado por una Cave Spider en una mina</gray>"
     ENDERMAN:
-      - "<purple>{player}</purple> <gray>hizo contacto visual. No debió.</gray>"
-      - "<purple>{player}</purple> <gray>miró a un Enderman en</gray> <aqua>{x}, {z}</aqua><gray>. Error de novato.</gray>"
+      - "<light_purple>{player}</light_purple> <gray>hizo contacto visual. No debió.</gray>"
+      - "<light_purple>{player}</light_purple> <gray>miró a un Enderman en</gray> <aqua>{x}, {z}</aqua><gray>. Error de novato.</gray>"
     ENDERMITE:
-      - "<purple>{player}</purple> <gray>fue matado por un Endermite. Un Endermite.</gray>"
+      - "<light_purple>{player}</light_purple> <gray>fue matado por un Endermite. Un Endermite.</gray>"
     SILVERFISH:
       - "<red>{player}</red> <gray>fue matado por un Silverfish. Qué descaro.</gray>"
     WITCH:

@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.1.5] — 2026-09-20
+
+### Changed
+- **Menu titles no longer repeat the plugin name.** `◈ Plugin › Section` is now
+  `◈ Section`: measured with the game's own font, the name alone ate more than half
+  of the 160 px a chest title has, so any real section came out cut off with an
+  ellipsis. The diamond keeps the plugin's colour, and anything still too wide is
+  trimmed to fit.
+
+---
+
 ## [1.1.4] — 2026-09-12
 
 ### Fixed
