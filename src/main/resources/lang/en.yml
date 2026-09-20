@@ -143,10 +143,10 @@ messages:
     CAVE_SPIDER:
       - "<red>{player}</red> <gray>was poisoned by a Cave Spider in a mineshaft</gray>"
     ENDERMAN:
-      - "<purple>{player}</purple> <gray>made eye contact. They shouldn't have.</gray>"
-      - "<purple>{player}</purple> <gray>looked at an Enderman at</gray> <aqua>{x}, {z}</aqua><gray>. Rookie mistake.</gray>"
+      - "<light_purple>{player}</light_purple> <gray>made eye contact. They shouldn't have.</gray>"
+      - "<light_purple>{player}</light_purple> <gray>looked at an Enderman at</gray> <aqua>{x}, {z}</aqua><gray>. Rookie mistake.</gray>"
     ENDERMITE:
-      - "<purple>{player}</purple> <gray>was killed by an Endermite. An Endermite.</gray>"
+      - "<light_purple>{player}</light_purple> <gray>was killed by an Endermite. An Endermite.</gray>"
     SILVERFISH:
       - "<red>{player}</red> <gray>was killed by a Silverfish. The audacity.</gray>"
     WITCH:
