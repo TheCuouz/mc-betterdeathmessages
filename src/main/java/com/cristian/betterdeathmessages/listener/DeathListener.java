@@ -227,7 +227,7 @@ public class DeathListener implements Listener {
             plugin.getMessages().get("stats.header", "player", victim.getName()) + "\n" +
             plugin.getMessages().get("stats.total-deaths", "value", String.valueOf(stats.totalDeaths)) + "\n" +
             plugin.getMessages().get("stats.kills",        "value", String.valueOf(stats.totalKills))  + "\n" +
-            plugin.getMessages().get("stats.kdr",          "value", String.format("%.2f", kdr))        + "\n" +
+            plugin.getMessages().get("stats.kdr",          "value", String.format(java.util.Locale.ROOT, "%.2f", kdr))        + "\n" +
             plugin.getMessages().get("stats.kill-streak-max", "value", String.valueOf(stats.longestKillStreak))
         );
     }

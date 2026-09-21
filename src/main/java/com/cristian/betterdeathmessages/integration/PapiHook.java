@@ -29,7 +29,7 @@ public class PapiHook extends PlaceholderExpansion {
             case "kills"        -> String.valueOf(stats.totalKills);
             case "kdr"          -> {
                 double kdr = (double) stats.totalKills / Math.max(1, stats.totalDeaths);
-                yield String.format("%.2f", kdr);
+                yield String.format(java.util.Locale.ROOT, "%.2f", kdr);
             }
             case "killstreak"   -> String.valueOf(stats.currentKillStreak);
             default             -> null;
