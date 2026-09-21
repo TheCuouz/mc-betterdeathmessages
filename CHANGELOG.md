@@ -11,6 +11,16 @@
 
 ---
 
+## [1.1.6] — 2026-09-21
+
+### Fixed
+- **Numbers no longer follow the server's system language.** `String.format` was used
+  without a `Locale`, so the very same jar printed `$12.50` on an English machine and
+  `$12,50` on a Spanish or French one, and the thousands separator flipped with it. Every
+  player-facing number is written with `Locale.ROOT` now, and a test keeps it that way.
+
+---
+
 ## [1.1.4] — 2026-09-12
 
 ### Fixed
