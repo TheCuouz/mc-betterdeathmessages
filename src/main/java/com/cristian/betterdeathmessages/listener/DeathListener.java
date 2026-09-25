@@ -10,6 +10,8 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EvokerFangs;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
@@ -65,7 +67,7 @@ public class DeathListener implements Listener {
                 playerKiller = p;
                 weapon = p.getInventory().getItemInMainHand().clone();
             } else {
-                mobKiller = damager;
+                mobKiller = killerBehind(damager);
             }
         }
 
@@ -89,6 +91,7 @@ public class DeathListener implements Listener {
             playerKiller,
             mobKiller,
             cause,
+            damageType(lastDmg),
             weapon,
             victim.getFallDistance(),
             victim.getWorld().getBiome(victim.getLocation()).getKey().getKey(),
@@ -101,7 +104,8 @@ public class DeathListener implements Listener {
             playerKiller != null,
             mobKiller    != null,
             mobKiller    != null ? mobKiller.getType().name() : "",
-            cause.name()
+            cause.name(),
+            ctx.damageType()
         );
 
         Component message = plugin.getMessagePicker().pick(ctx);
@@ -209,6 +213,28 @@ public class DeathListener implements Listener {
             if (!msg.isEmpty()) {
                 Bukkit.broadcast(MM.deserialize(msg));
             }
+        }
+    }
+
+    /**
+     * The mob a death is credited to: the skeleton, not its arrow; the evoker, not its fangs.
+     * Lightning, TNT or a falling block credit nobody, so the damage type picks the message.
+     */
+    static Entity killerBehind(Entity damager) {
+        if (damager instanceof Projectile proj) {
+            // An arrow whose shooter is gone still reads better than "died in mysterious ways"
+            return proj.getShooter() instanceof LivingEntity shooter ? shooter : proj;
+        }
+        if (damager instanceof EvokerFangs fangs) return fangs.getOwner();
+        return damager instanceof LivingEntity ? damager : null;
+    }
+
+    private static String damageType(EntityDamageEvent event) {
+        if (event == null) return null;
+        try {
+            return event.getDamageSource().getDamageType().getKey().getKey();
+        } catch (RuntimeException | LinkageError e) {
+            return null;
         }
     }
 

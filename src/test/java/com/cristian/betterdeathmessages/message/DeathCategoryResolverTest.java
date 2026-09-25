@@ -124,4 +124,22 @@ class DeathCategoryResolverTest {
     void unknownCause_returnsUnknown() {
         assertEquals("unknown", DeathCategoryResolver.resolve(false, false, "", "SOME_FUTURE_CAUSE"));
     }
+
+    @Test
+    void damageTypeWinsOverACustomCause() {
+        // /damage and other plugins deliver cactus and lightning with cause CUSTOM
+        assertEquals("cactus", DeathCategoryResolver.resolve(false, false, "", "CUSTOM", "cactus"));
+        assertEquals("lightning", DeathCategoryResolver.resolve(false, false, "", "CUSTOM", "lightning_bolt"));
+        assertEquals("freeze", DeathCategoryResolver.resolve(false, false, "", "CUSTOM", "freeze"));
+    }
+
+    @Test
+    void berryBushIsNotACactus() {
+        assertEquals("unknown", DeathCategoryResolver.resolve(false, false, "", "CONTACT", "sweet_berry_bush"));
+    }
+
+    @Test
+    void unknownTypeFallsBackToTheCause() {
+        assertEquals("fall", DeathCategoryResolver.resolve(false, false, "", "FALL", "some_mod:odd"));
+    }
 }

@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.1.7] — 2026-09-25
+
+### Fixed
+- **Cactus, lightning and other deaths no longer fall into "died in mysterious ways".** Damage
+  dealt by the `/damage` command or by other plugins arrives with cause `CUSTOM`, so only the
+  generic lines were used. The death type is now read from the damage itself (cactus,
+  lightning, freezing, explosions, the Warden…) and each one gets its own message.
+- **Arrows are credited to whoever shot them.** A skeleton's arrow used to say "slain by a
+  Arrow"; it now uses the Skeleton, Stray or Bogged lines, and `{distance}` is how far away
+  the shooter stood instead of how far the victim had fallen.
+- **"an Iron sword", not "a Iron sword".** In English, the "a" before `{weapon}` and `{mob}`
+  now changes to "an" when the name starts with a vowel.
+- **Biomes read as names.** `{biome}` shows "Lukewarm Ocean" instead of `lukewarm_ocean`.
+- Sweet berry bushes no longer use the cactus lines.
+
 ## [1.1.5] — 2026-09-20
 
 ### Changed
