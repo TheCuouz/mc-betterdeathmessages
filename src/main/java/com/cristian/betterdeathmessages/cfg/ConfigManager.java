@@ -20,7 +20,7 @@ public final class ConfigManager {
 
     public FileConfiguration raw() { return cfg; }
 
-    /** Active locale (ISO-639-1 two-letter code, lowercase). Default "es". */
+    /** Active locale (ISO-639-1 two-letter code, lowercase). Default "en". */
     public String language() { return cfg.getString("language", "en").toLowerCase(); }
 
     public boolean lastWordsEnabled()  { return cfg.getBoolean("last-words.enabled", true); }

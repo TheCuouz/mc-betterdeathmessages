@@ -12,6 +12,7 @@ public record DeathContext(
     @Nullable Player playerKiller,
     @Nullable Entity mobKiller,
     EntityDamageEvent.DamageCause cause,
+    @Nullable String damageType,   // "cactus", "lightning_bolt"… — reliable where cause is CUSTOM
     @Nullable ItemStack weapon,
     double fallDistance,
     String biome,

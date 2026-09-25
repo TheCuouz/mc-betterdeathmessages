@@ -9,8 +9,11 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Picks a random death message template from the active locale's
@@ -53,7 +56,8 @@ public class MessagePicker {
             ctx.playerKiller() != null,
             ctx.mobKiller()    != null,
             ctx.mobKiller()    != null ? ctx.mobKiller().getType().name() : "",
-            ctx.cause().name()
+            ctx.cause().name(),
+            ctx.damageType()
         );
 
         List<String> templateList = getTemplates(category);
@@ -61,13 +65,19 @@ public class MessagePicker {
         if (templateList.isEmpty()) return Component.text(ctx.victim().getName() + " died.");
 
         String template = templateList.get(RANDOM.nextInt(templateList.size()));
+        String weapon = weaponName(ctx.weapon());
+        String mob = ctx.mobKiller() != null ? formatMob(ctx.mobKiller().getType().name()) : "";
+        if (english()) {
+            template = fixArticle(template, "{weapon}", weapon);
+            template = fixArticle(template, "{mob}", mob);
+        }
         String rendered = template
             .replace("{player}",     ctx.victim().getName())
             .replace("{killer}",     ctx.playerKiller() != null ? ctx.playerKiller().getName() : "")
-            .replace("{weapon}",     weaponName(ctx.weapon()))
-            .replace("{mob}",        ctx.mobKiller() != null ? formatMob(ctx.mobKiller().getType().name()) : "")
-            .replace("{distance}",   String.format(java.util.Locale.ROOT, "%.0f", ctx.fallDistance()))
-            .replace("{biome}",      ctx.biome())
+            .replace("{weapon}",     weapon)
+            .replace("{mob}",        mob)
+            .replace("{distance}",   String.format(java.util.Locale.ROOT, "%.0f", distance(ctx)))
+            .replace("{biome}",      biomeName(ctx.biome()))
             .replace("{last_words}", resolveLastWords(ctx))
             .replace("{x}",          String.valueOf((int) ctx.deathLocation().getX()))
             .replace("{y}",          String.valueOf((int) ctx.deathLocation().getY()))
@@ -76,6 +86,47 @@ public class MessagePicker {
             .replace("{inventory_value}", String.format(java.util.Locale.ROOT, "%.0f", ctx.inventoryValue()));
 
         return MM.deserialize(rendered);
+    }
+
+    /** How far the killer stood (a skeleton's shot), or how far the victim fell. */
+    private static double distance(DeathContext ctx) {
+        var killer = ctx.playerKiller() != null ? ctx.playerKiller() : ctx.mobKiller();
+        if (killer != null && killer.getWorld().equals(ctx.deathLocation().getWorld())) {
+            return killer.getLocation().distance(ctx.deathLocation());
+        }
+        return ctx.fallDistance();
+    }
+
+    private boolean english() {
+        return pluginConfig == null || pluginConfig.getString("language", "en").toLowerCase(Locale.ROOT).startsWith("en");
+    }
+
+    /** "a" + optional tags + token, e.g. {@code with a</gray> <aqua>{weapon}}. */
+    private static final Pattern ARTICLE = Pattern.compile("\\b([Aa])n?((?:\\s*</?[a-zA-Z_#:][^>]*>)*\\s+(?:<[^/][^>]*>\\s*)*)");
+
+    /** Picks "a" or "an" in front of a token by the word that will replace it ("an Iron sword"). */
+    static String fixArticle(String template, String token, String value) {
+        if (value.isEmpty() || !template.contains(token)) return template;
+        boolean vowel = "aeiouAEIOU".indexOf(value.charAt(0)) >= 0;
+        Matcher m = Pattern.compile(ARTICLE.pattern() + Pattern.quote(token)).matcher(template);
+        StringBuilder out = new StringBuilder();
+        while (m.find()) {
+            String article = m.group(1) + (vowel ? "n" : "");
+            m.appendReplacement(out, Matcher.quoteReplacement(article + m.group(2) + token));
+        }
+        m.appendTail(out);
+        return out.toString();
+    }
+
+    /** "lukewarm_ocean" -> "Lukewarm Ocean". */
+    static String biomeName(String key) {
+        StringBuilder out = new StringBuilder();
+        for (String word : key.split("_")) {
+            if (word.isEmpty()) continue;
+            if (!out.isEmpty()) out.append(' ');
+            out.append(Character.toUpperCase(word.charAt(0))).append(word.substring(1));
+        }
+        return out.toString();
     }
 
     private String resolveLastWords(DeathContext ctx) {

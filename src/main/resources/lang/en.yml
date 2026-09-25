@@ -1,6 +1,7 @@
 # BetterDeathMessages — english
 # All strings are MiniMessage.
 # Tokens: {player} {killer} {weapon} {mob} {distance} {biome} {last_words}
+#         {distance} = blocks to the killer, or blocks fallen when nobody killed them
 #         {x} {y} {z} {dimension}
 
 # ── Command feedback ──────────────────────────────────────────────────────────
