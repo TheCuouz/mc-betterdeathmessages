@@ -4,6 +4,9 @@ import com.cristian.betterdeathmessages.BetterDeathMessagesPlugin;
 import com.cristian.betterdeathmessages.message.DeathCategoryResolver;
 import com.cristian.betterdeathmessages.model.DeathContext;
 import com.cristian.betterdeathmessages.model.PlayerDeathStats;
+import com.ttsstudio.sdk.compat.Reflect;
+import com.ttsstudio.sdk.compat.Sounds;
+import com.ttsstudio.sdk.text.Texts;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -25,6 +28,7 @@ import org.bukkit.inventory.ItemStack;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import java.util.logging.Level;
 
 public class DeathListener implements Listener {
 
@@ -45,7 +49,7 @@ public class DeathListener implements Listener {
         try {
             handleDeath(event);
         } catch (Throwable t) {
-            plugin.getSLF4JLogger().warn(
+            plugin.getLogger().log(Level.WARNING,
                 "Failed to build custom death message; falling back to default.", t);
         }
     }
@@ -117,19 +121,19 @@ public class DeathListener implements Listener {
             message = message.hoverEvent(HoverEvent.showText(buildHoverText(victim, victimStats)));
         }
 
-        event.deathMessage(message);
+        Texts.deathMessage(event, message);
 
         // Radius-filtered broadcast
         int broadcastRadius = plugin.getConfigManager().broadcastRadius();
         if (broadcastRadius > 0) {
             // Override Paper's global broadcast with a radius-limited one
-            event.deathMessage(null);
+            Texts.deathMessage(event, null);
             Location deathLoc = victim.getLocation();
             Component finalMsg = message;
             for (Player online : Bukkit.getOnlinePlayers()) {
                 if (online.getWorld().equals(deathLoc.getWorld())
                         && online.getLocation().distanceSquared(deathLoc) <= (long) broadcastRadius * broadcastRadius) {
-                    online.sendMessage(finalMsg);
+                    Texts.send(online, finalMsg);
                 }
             }
         }
@@ -141,19 +145,14 @@ public class DeathListener implements Listener {
             float pitch  = plugin.getConfigManager().deathSoundPitch();
             int soundRadius = plugin.getConfigManager().deathSoundRadius();
             Location deathLoc = victim.getLocation();
-            org.bukkit.Sound sound = null;
-            try {
-                sound = org.bukkit.Sound.valueOf(soundName);
-            } catch (IllegalArgumentException e) {
-                plugin.getSLF4JLogger().warn("Invalid death-sound.sound value: {}", soundName);
-            }
-            if (sound != null) {
-                final org.bukkit.Sound finalSound = sound;
-                final Location finalLoc = deathLoc;
+            // Name or key, resolved per version by the SDK (Sound.valueOf breaks across versions).
+            if (!Sounds.exists(soundName)) {
+                plugin.getLogger().warning("Invalid death-sound.sound value: " + soundName);
+            } else {
                 for (Player online : Bukkit.getOnlinePlayers()) {
-                    if (online.getWorld().equals(finalLoc.getWorld())
-                            && online.getLocation().distanceSquared(finalLoc) <= (long) soundRadius * soundRadius) {
-                        online.playSound(finalLoc, finalSound, volume, pitch);
+                    if (online.getWorld().equals(deathLoc.getWorld())
+                            && online.getLocation().distanceSquared(deathLoc) <= (long) soundRadius * soundRadius) {
+                        Sounds.play(online, deathLoc, soundName, volume, pitch);
                     }
                 }
             }
@@ -179,7 +178,7 @@ public class DeathListener implements Listener {
                     if (!rawTemplate.isEmpty()) {
                         String msg = rawTemplate.replace("{killer}", finalKiller.getName());
                         Bukkit.getScheduler().runTask(plugin,
-                            () -> Bukkit.broadcast(MM.deserialize(msg)));
+                            () -> Texts.broadcast(MM.deserialize(msg)));
                     }
                 }
 
@@ -193,7 +192,7 @@ public class DeathListener implements Listener {
                             .replace("{killer}", finalKiller.getName())
                             .replace("{victim}", victimName);
                         Bukkit.getScheduler().runTask(plugin,
-                            () -> Bukkit.broadcast(MM.deserialize(msg)));
+                            () -> Texts.broadcast(MM.deserialize(msg)));
                     }
                 }
             }
@@ -202,7 +201,7 @@ public class DeathListener implements Listener {
         }).exceptionally(ex -> {
             // Disk-write or stats-update failure on the async thread must not be
             // swallowed silently — surface it so admins can react.
-            plugin.getSLF4JLogger().warn("Failed to persist death stats asynchronously.", ex);
+            plugin.getLogger().log(Level.WARNING, "Failed to persist death stats asynchronously.", ex);
             return null;
         });
 
@@ -211,7 +210,7 @@ public class DeathListener implements Listener {
             String msg = plugin.getMessages()
                 .get("first-death-of-day.message", "player", victim.getName());
             if (!msg.isEmpty()) {
-                Bukkit.broadcast(MM.deserialize(msg));
+                Texts.broadcast(MM.deserialize(msg));
             }
         }
     }
@@ -229,10 +228,16 @@ public class DeathListener implements Listener {
         return damager instanceof LivingEntity ? damager : null;
     }
 
+    /** Damage sources exist from 1.20.4; before that the cause alone picks the message. */
     private static String damageType(EntityDamageEvent event) {
         if (event == null) return null;
+        java.lang.reflect.Method getSource = Reflect.findMethod(EntityDamageEvent.class, "getDamageSource");
+        java.lang.reflect.Method getType = Reflect.findMethod(
+            Reflect.findClass("org.bukkit.damage.DamageSource"), "getDamageType");
+        if (getSource == null || getType == null) return null;
         try {
-            return event.getDamageSource().getDamageType().getKey().getKey();
+            Object type = Reflect.invoke(getType, Reflect.invoke(getSource, event));
+            return type instanceof org.bukkit.Keyed ? ((org.bukkit.Keyed) type).getKey().getKey() : null;
         } catch (RuntimeException | LinkageError e) {
             return null;
         }

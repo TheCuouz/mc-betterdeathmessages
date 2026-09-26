@@ -12,7 +12,7 @@
                                         M E S S A G E S
 ```
 
-**Narrative, MiniMessage-styled death messages with persistent kill/death stats for Paper 1.21.x.**
+**Narrative, MiniMessage-styled death messages with persistent kill/death stats for Paper and Spigot, 1.17 to 26.x.**
 
 Part of the **TTS-Studio plugin suite** — built around a shared SDK for consistent console banners, chat prefixes, and brand presence across every plugin you run.
 
@@ -85,8 +85,8 @@ The status line reports the number of templates parsed from `messages.yml`, whet
 
 | Requirement | Version | Notes |
 |-------------|---------|-------|
-| Paper | 1.21.x | Spigot is **not** supported (uses `event.deathMessage(Component)`) |
-| Java | 21+ | Required |
+| Paper or Spigot | 1.17 – 26.x | Forks of either (Purpur, Pufferfish…) work too |
+| Java | 16+ | Whatever your server version already needs |
 | PlaceholderAPI | 2.11.6+ | Optional — enables `%bdm_*%` placeholders |
 
 ---

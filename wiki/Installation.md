@@ -10,13 +10,11 @@ This page walks you through getting **BetterDeathMessages** running on your Pape
 
 | Software | Minimum Version | Required? |
 |----------|-----------------|-----------|
-| [Paper](https://papermc.io/) | **1.21.x** | ✅ Yes |
-| Java | **21** | ✅ Yes |
+| [Paper](https://papermc.io/) or Spigot | **1.17 – 26.x** | ✅ Yes |
+| Java | **16+** | ✅ Yes |
 | [PlaceholderAPI](https://www.spigotmc.org/resources/placeholderapi.6245/) | 2.11.6+ | ⚡ Optional |
 
-> ⚠️ **Warning:** BetterDeathMessages relies on Paper's `PlayerDeathEvent#deathMessage(Component)` API. Spigot, CraftBukkit, and Folia are **not** supported.
-
-> ⚠️ **Warning:** Java 21 is the minimum. Running on Java 17 will cause the plugin to fail to load with a `UnsupportedClassVersionError`.
+> ⚠️ **Warning:** Folia is **not** supported. Minecraft 1.16 and older are not supported either: the plugin refuses to load there.
 
 ---
 
@@ -127,8 +125,7 @@ No server restart needed.
 
 | Symptom | Likely Cause | Fix |
 |---------|--------------|-----|
-| Plugin not loading | Java < 21 | Upgrade JRE to Java 21+ |
-| `NoSuchMethodError: deathMessage` | Server is Spigot, not Paper | Switch to Paper 1.21.x |
+| Plugin not loading | Server older than 1.17 or Java older than 16 | Use Minecraft 1.17 or newer |
 | Vanilla death messages still appear | Plugin disabled or `/reload` used | Check console; use `/bdm reload`, not `/reload` |
 | Placeholders show `%bdm_kills%` literally | PAPI not installed or not reloaded | Install PAPI, run `/papi reload` |
 | Hover stats missing on broadcast | `global-broadcast.hover-stats: false` | Set to `true` in `messages.yml` |
