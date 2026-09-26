@@ -14,6 +14,13 @@
   now changes to "an" when the name starts with a vowel.
 - **Biomes read as names.** `{biome}` shows "Lukewarm Ocean" instead of `lukewarm_ocean`.
 - Sweet berry bushes no longer use the cactus lines.
+- **Last words work with channel chat plugins.** A message only counted as public if the
+  console was among its readers, and plugins like ChattyChannels hand the chat to players
+  only, so nothing was ever captured. Public now means every online player can read it;
+  local, staff and private channels are still left out.
+- **No empty quotes or empty weapons.** "X's last words: — then Y arrived" came up when the
+  player hadn't said anything, and "defeated by Y wielding" when Y fought bare-handed. Lines
+  that need a value that isn't there are skipped.
 
 ## [1.1.5] — 2026-09-20
 

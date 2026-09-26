@@ -32,4 +32,22 @@ class MessageWordingTest {
         assertEquals("Lukewarm Ocean", MessagePicker.biomeName("lukewarm_ocean"));
         assertEquals("Plains", MessagePicker.biomeName("plains"));
     }
+
+    @Test
+    void noLastWords_skipsTheLastWordsLines() {
+        var list = java.util.List.of("{player} fell", "{player}'s last words: {last_words}");
+        assertEquals(java.util.List.of("{player} fell"), MessagePicker.without(list, "{last_words}"));
+    }
+
+    @Test
+    void noLastWords_keepsTheListIfEveryLineQuotes() {
+        var list = java.util.List.of("{player}'s last words: {last_words}");
+        assertEquals(list, MessagePicker.without(list, "{last_words}"));
+    }
+
+    @Test
+    void bareHands_skipsTheWeaponLines() {
+        var list = java.util.List.of("{killer} beat {player}", "{player} was defeated by {killer} wielding {weapon}");
+        assertEquals(java.util.List.of("{killer} beat {player}"), MessagePicker.without(list, "{weapon}"));
+    }
 }

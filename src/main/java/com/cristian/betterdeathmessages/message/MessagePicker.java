@@ -60,12 +60,15 @@ public class MessagePicker {
             ctx.damageType()
         );
 
+        String lastWords = resolveLastWords(ctx);
+        String weapon = weaponName(ctx.weapon());
         List<String> templateList = getTemplates(category);
         if (templateList.isEmpty()) templateList = templates.getStringList("messages.unknown");
+        if (lastWords.isBlank()) templateList = without(templateList, "{last_words}");
+        if (weapon.isEmpty()) templateList = without(templateList, "{weapon}");
         if (templateList.isEmpty()) return Component.text(ctx.victim().getName() + " died.");
 
         String template = templateList.get(RANDOM.nextInt(templateList.size()));
-        String weapon = weaponName(ctx.weapon());
         String mob = ctx.mobKiller() != null ? formatMob(ctx.mobKiller().getType().name()) : "";
         if (english()) {
             template = fixArticle(template, "{weapon}", weapon);
@@ -78,7 +81,7 @@ public class MessagePicker {
             .replace("{mob}",        mob)
             .replace("{distance}",   String.format(java.util.Locale.ROOT, "%.0f", distance(ctx)))
             .replace("{biome}",      biomeName(ctx.biome()))
-            .replace("{last_words}", resolveLastWords(ctx))
+            .replace("{last_words}", lastWords)
             .replace("{x}",          String.valueOf((int) ctx.deathLocation().getX()))
             .replace("{y}",          String.valueOf((int) ctx.deathLocation().getY()))
             .replace("{z}",          String.valueOf((int) ctx.deathLocation().getZ()))
@@ -127,6 +130,16 @@ public class MessagePicker {
             out.append(Character.toUpperCase(word.charAt(0))).append(word.substring(1));
         }
         return out.toString();
+    }
+
+    /**
+     * Drops the lines that need a value we don't have: no chat to quote gave
+     * "X's last words: — then Y arrived", bare fists gave "defeated by Y wielding".
+     * If every line needs it, the list is kept as it is.
+     */
+    static List<String> without(List<String> list, String token) {
+        List<String> kept = list.stream().filter(t -> !t.contains(token)).toList();
+        return kept.isEmpty() ? list : kept;
     }
 
     private String resolveLastWords(DeathContext ctx) {
