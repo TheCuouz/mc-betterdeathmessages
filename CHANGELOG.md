@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.2.1] — 2026-09-26
+
+### Fixed
+- **On Spigot 1.20.5 and newer, `/deaths` and `/bdm` replies never reached the player**, and a
+  death message with a hover card was lost too. The plugin carried its own copy of a JSON library
+  that the server did not recognise. It now uses the server's own, and every message arrives.
+  Paper was not affected.
+
 ## [1.2.0] — 2026-09-26
 
 ### Added
