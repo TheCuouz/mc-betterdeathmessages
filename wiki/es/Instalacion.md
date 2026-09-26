@@ -2,7 +2,7 @@
 
 # 📦 Instalación
 
-Esta página te guía paso a paso para poner **BetterDeathMessages** en funcionamiento en tu servidor Paper.
+Esta página te guía paso a paso para poner **BetterDeathMessages** en funcionamiento en tu servidor Paper o Spigot.
 
 ---
 
@@ -10,13 +10,11 @@ Esta página te guía paso a paso para poner **BetterDeathMessages** en funciona
 
 | Software | Versión Mínima | ¿Requerido? |
 |----------|----------------|-------------|
-| [Paper](https://papermc.io/) | **1.21.x** | ✅ Sí |
-| Java | **21** | ✅ Sí |
+| [Paper](https://papermc.io/) o Spigot | **1.17 – 26.x** | ✅ Sí |
+| Java | **16+** | ✅ Sí |
 | [PlaceholderAPI](https://www.spigotmc.org/resources/placeholderapi.6245/) | 2.11.6+ | ⚡ Opcional |
 
-> ⚠️ **Advertencia:** BetterDeathMessages depende de la API `PlayerDeathEvent#deathMessage(Component)` de Paper. Spigot, CraftBukkit y Folia **no** están soportados.
-
-> ⚠️ **Advertencia:** Java 21 es el mínimo. Ejecutarlo con Java 17 causará que el plugin falle al cargar con un `UnsupportedClassVersionError`.
+> ⚠️ **Advertencia:** Folia **no** está soportado. Tampoco la 1.16 ni anteriores: ahí el plugin no carga.
 
 ---
 
@@ -127,8 +125,7 @@ No es necesario reiniciar el servidor.
 
 | Síntoma | Causa Probable | Solución |
 |---------|----------------|----------|
-| El plugin no carga | Java < 21 | Actualiza el JRE a Java 21+ |
-| `NoSuchMethodError: deathMessage` | El servidor es Spigot, no Paper | Cambia a Paper 1.21.x |
+| El plugin no carga | Servidor anterior a la 1.17 o Java anterior a 16 | Usa Minecraft 1.17 o posterior |
 | Los mensajes de muerte de vainilla siguen apareciendo | Plugin deshabilitado o se usó `/reload` | Comprueba la consola; usa `/bdm reload`, no `/reload` |
 | Los placeholders muestran `%bdm_kills%` literalmente | PAPI no instalado o no recargado | Instala PAPI, ejecuta `/papi reload` |
 | Faltan las stats de hover en la transmisión | `global-broadcast.hover-stats: false` | Establece `true` en `messages.yml` |
