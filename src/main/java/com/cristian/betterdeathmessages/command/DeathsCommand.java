@@ -4,6 +4,8 @@ import com.cristian.betterdeathmessages.BetterDeathMessagesPlugin;
 import com.cristian.betterdeathmessages.model.PlayerDeathStats;
 import com.ttsstudio.sdk.PluginIdentity;
 import com.ttsstudio.sdk.chat.ChatPrefix;
+import com.ttsstudio.sdk.compat.Players;
+import com.ttsstudio.sdk.text.Texts;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -40,7 +42,7 @@ public class DeathsCommand implements CommandExecutor {
         String targetName;
 
         if (args.length >= 1) {
-            OfflinePlayer op = Bukkit.getOfflinePlayerIfCached(args[0]);
+            OfflinePlayer op = Players.cachedOffline(args[0]);
             if (op == null) {
                 ChatPrefix.error(sender, identity,
                     plugin.getMessages().get("command.player-not-found", "player", args[0]));
@@ -85,11 +87,11 @@ public class DeathsCommand implements CommandExecutor {
         MiniMessage mm = MiniMessage.miniMessage();
         String headerKey = byKills ? "leaderboard.killers-header" : "leaderboard.deaths-header";
         String headerRaw = plugin.getMessages().getTemplates().getString(headerKey, "");
-        if (!headerRaw.isEmpty()) sender.sendMessage(mm.deserialize(headerRaw));
+        if (!headerRaw.isEmpty()) Texts.send(sender, mm.deserialize(headerRaw));
 
         if (sorted.isEmpty() || start >= sorted.size()) {
             String emptyRaw = plugin.getMessages().getTemplates().getString("leaderboard.empty", "<gray>No data yet.</gray>");
-            sender.sendMessage(mm.deserialize(emptyRaw));
+            Texts.send(sender, mm.deserialize(emptyRaw));
             return;
         }
 
@@ -112,7 +114,7 @@ public class DeathsCommand implements CommandExecutor {
                 .replace("{pos}", String.valueOf(i + 1))
                 .replace("{player}", name)
                 .replace("{value}", String.valueOf(value));
-            sender.sendMessage(mm.deserialize(entryRaw));
+            Texts.send(sender, mm.deserialize(entryRaw));
         }
     }
 

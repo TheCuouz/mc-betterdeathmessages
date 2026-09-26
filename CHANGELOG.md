@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.2.0] — 2026-09-26
+
+### Added
+- **Runs on Paper and Spigot, from 1.17 to 26.x.** It used to need Paper 1.21 and Java 21.
+  Tested on a clean server with a player joining, chatting and dying on Paper 1.17.1, 1.20.4,
+  1.21.11, 26.1.2 and 26.2 and on Spigot 1.21.11. On Paper everything looks exactly as before;
+  on Spigot the same messages, hover cards and colours are sent through a bundled chat library.
+
 ## [1.1.7] — 2026-09-25
 
 ### Fixed
