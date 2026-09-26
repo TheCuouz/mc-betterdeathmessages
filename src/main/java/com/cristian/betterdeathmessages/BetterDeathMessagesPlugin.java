@@ -15,6 +15,8 @@ import com.cristian.betterdeathmessages.tracker.FirstDeathTracker;
 import com.cristian.betterdeathmessages.tracker.KillStreakBroadcaster;
 import com.cristian.betterdeathmessages.tracker.FirstBloodTracker;
 import com.ttsstudio.sdk.PluginIdentity;
+import com.ttsstudio.sdk.compat.Chat;
+import com.ttsstudio.sdk.text.Texts;
 import com.ttsstudio.sdk.console.ConsoleBanner;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.configuration.ConfigurationSection;
@@ -38,6 +40,7 @@ public final class BetterDeathMessagesPlugin extends JavaPlugin {
     @Override
     public void onEnable() {
         long startTime = System.currentTimeMillis();
+        Texts.install(this);
 
         configManager = new ConfigManager(this);
         configManager.reload();
@@ -68,8 +71,7 @@ public final class BetterDeathMessagesPlugin extends JavaPlugin {
 
         getServer().getPluginManager().registerEvents(new DeathListener(this), this);
         if (configManager.lastWordsEnabled()) {
-            getServer().getPluginManager()
-                .registerEvents(new ChatCaptureListener(lastWordsCache), this);
+            Chat.onPublicMessage(this, new ChatCaptureListener(lastWordsCache));
             // Periodic janitor: drop expired entries every minute.
             getServer().getScheduler().runTaskTimer(
                 this, lastWordsCache::purgeExpired, 20L * 60L, 20L * 60L);
@@ -104,6 +106,7 @@ public final class BetterDeathMessagesPlugin extends JavaPlugin {
             deathStatsService.save();
         }
         ConsoleBanner.disable(this, PluginIdentity.of(this)).emit();
+        Texts.shutdown();
     }
 
     public void reload() {

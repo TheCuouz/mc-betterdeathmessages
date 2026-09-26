@@ -2,9 +2,9 @@ package com.cristian.betterdeathmessages.message;
 
 import com.cristian.betterdeathmessages.lastwords.LastWordsCache;
 import com.cristian.betterdeathmessages.model.DeathContext;
+import com.ttsstudio.sdk.text.Items;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
-import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
 
@@ -170,8 +170,7 @@ public class MessagePicker {
     private String weaponName(ItemStack item) {
         if (item == null || item.getType().isAir()) return "";
         if (item.hasItemMeta() && item.getItemMeta().hasDisplayName()) {
-            return PlainTextComponentSerializer.plainText()
-                .serialize(item.getItemMeta().displayName());
+            return Items.plainName(item.getItemMeta());
         }
         String raw = item.getType().name().replace("_", " ").toLowerCase();
         return Character.toUpperCase(raw.charAt(0)) + raw.substring(1);

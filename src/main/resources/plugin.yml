@@ -1,7 +1,7 @@
 name: BetterDeathMessages
 version: "${project.version}"
 main: com.cristian.betterdeathmessages.BetterDeathMessagesPlugin
-api-version: "1.21"
+api-version: "1.17"
 description: "Narrative death messages with hover stats and global broadcasts"
 authors: [Cristian]
 softdepend: [PlaceholderAPI, Vault]
