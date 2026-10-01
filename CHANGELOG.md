@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.2] — 2026-09-27
+
+### Fixed
+- **Death messages no longer fail on 1.21.3 and newer** when the biome is read (the biome type became an interface and the old call broke).
+- **Last words on Paper.** Since 1.2.0 the quote in a death message came out as a block of
+  internal text instead of what the player said. Spigot was not affected.
+
 ## [1.2.1] — 2026-09-26
 
 ### Fixed

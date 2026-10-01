@@ -6,7 +6,7 @@
 
     <groupId>com.cristian</groupId>
     <artifactId>betterdeathmessages</artifactId>
-    <version>1.2.1</version>
+    <version>1.2.2</version>
     <packaging>jar</packaging>
 
     <properties>
@@ -68,7 +68,7 @@
         <dependency>
             <groupId>com.ttsstudio</groupId>
             <artifactId>tts-sdk</artifactId>
-            <version>0.3.0</version>
+            <version>0.7.0</version>
             <scope>compile</scope>
         </dependency>
         <dependency>

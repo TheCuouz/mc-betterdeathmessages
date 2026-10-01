@@ -98,7 +98,7 @@ public class DeathListener implements Listener {
             damageType(lastDmg),
             weapon,
             victim.getFallDistance(),
-            victim.getWorld().getBiome(victim.getLocation()).getKey().getKey(),
+            ((org.bukkit.Keyed) victim.getWorld().getBiome(victim.getLocation())).getKey().getKey(),
             victim.getLocation(),
             dimension,
             inventoryValue
