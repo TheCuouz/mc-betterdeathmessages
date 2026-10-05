@@ -45,7 +45,8 @@ public class DeathStatsService {
         }
     }
 
-    public void save() {
+    // Synchronized with record(): two deaths at once wrote the file together.
+    public synchronized void save() {
         Map<String, PlayerDeathStats> serializable = new HashMap<>();
         stats.forEach((uuid, s) -> serializable.put(uuid.toString(), s));
         try (Writer w = new FileWriter(dataFile)) {
@@ -64,6 +65,12 @@ public class DeathStatsService {
             }
         } catch (IOException e) {
             throw new UncheckedIOException(e);
+        } catch (RuntimeException unreadable) {
+            // A damaged deaths.json must not stop the plugin from starting.
+            File aside = new File(dataFile.getParentFile(), "deaths.json.broken");
+            dataFile.renameTo(aside);
+            java.util.logging.Logger.getLogger("BetterDeathMessages").warning(
+                "deaths.json could not be read and was set aside as " + aside.getName() + ": " + unreadable.getMessage());
         }
     }
 

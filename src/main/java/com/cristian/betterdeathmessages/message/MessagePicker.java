@@ -153,8 +153,13 @@ public class MessagePicker {
         return cached.map(MessagePicker::escapeForMiniMessage).orElse(fallback);
     }
 
-    private static String escapeForMiniMessage(String raw) {
-        return raw.replace("<", "\\<");
+    /**
+     * Text chosen by a player (what they said, what they named their sword),
+     * made safe for a MiniMessage template. The backslash goes first: escaping
+     * only "<" let "\<click:...>" through.
+     */
+    public static String escapeForMiniMessage(String raw) {
+        return raw.replace("\\", "\\\\").replace("<", "\\<");
     }
 
     private List<String> getTemplates(String category) {
@@ -170,7 +175,9 @@ public class MessagePicker {
     private String weaponName(ItemStack item) {
         if (item == null || item.getType().isAir()) return "";
         if (item.hasItemMeta() && item.getItemMeta().hasDisplayName()) {
-            return Items.plainName(item.getItemMeta());
+            // An anvil name is typed by the player and ends up in a message sent
+            // to the whole server: its tags must stay text.
+            return escapeForMiniMessage(Items.plainName(item.getItemMeta()));
         }
         String raw = item.getType().name().replace("_", " ").toLowerCase();
         return Character.toUpperCase(raw.charAt(0)) + raw.substring(1);

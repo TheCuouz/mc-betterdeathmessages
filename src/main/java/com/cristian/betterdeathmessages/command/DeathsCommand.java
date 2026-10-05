@@ -106,6 +106,10 @@ public class DeathsCommand implements CommandExecutor {
             }
             // Fall back to cached offline player lookup by name (avoids blocking I/O)
             if (name == null) {
+                // By UUID this reads the server's own cache: no web request.
+                name = Bukkit.getOfflinePlayer(entry.getKey()).getName();
+            }
+            if (name == null) {
                 name = entry.getKey().toString().substring(0, 8);
             }
             int value = byKills ? entry.getValue().totalKills : entry.getValue().totalDeaths;

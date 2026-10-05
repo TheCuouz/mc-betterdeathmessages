@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.2.3] — 2026-10-05
+
+### Security
+- **A weapon renamed in an anvil can no longer put clickable tags in the death message.** The name went into the message sent to the whole server with its MiniMessage tags interpreted, so a sword named like a tag could show text that ran a command when clicked. Last words had the same hole behind a leading backslash. Both are now shown exactly as written.
+
+### Fixed
+- **`/deaths top` shows names for players who are offline** instead of the first characters of their id.
+- **Two deaths at the same moment no longer damage `deaths.json`,** and a damaged file is set aside with a warning instead of stopping the plugin from starting.
+
 ## [1.2.2] — 2026-09-27
 
 ### Fixed
