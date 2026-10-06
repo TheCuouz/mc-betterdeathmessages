@@ -120,7 +120,7 @@ hologram:
 
 - The expansion identifier is `bdm`, registered via Adventure's `PlaceholderExpansion`.
 - `persist()` returns `true`, so offline-player lookups work in plugins that support them (e.g. TAB's `@offline` placeholders).
-- Stats are read from the in-memory `ConcurrentHashMap` in [`DeathStatsService`](../src/main/java/com/cristian/betterdeathmessages/service/DeathStatsService.java), which is hydrated from `deaths.json` on enable.
+- Stats are read from the in-memory `ConcurrentHashMap` in [`DeathStatsService`](../src/main/java/com/ttsstudio/betterdeathmessages/service/DeathStatsService.java), which is hydrated from `deaths.json` on enable.
 - Placeholders return an empty string for `null` players. For unknown keys, they return `null` (PAPI's signal to render the raw placeholder).
 
 > 💡 **Tip:** Combine `%bdm_kdr%` with conditional placeholder plugins (e.g. PlaceholderAPI's `javascript` expansion) to award titles like "Veteran" at KDR ≥ 2.0.

@@ -120,7 +120,7 @@ hologram:
 
 - El identificador de expansión es `bdm`, registrado mediante `PlaceholderExpansion` de Adventure.
 - `persist()` devuelve `true`, por lo que las búsquedas de jugadores desconectados funcionan en plugins que las soportan (p. ej., placeholders `@offline` de TAB).
-- Los placeholders se leen desde el `ConcurrentHashMap` en memoria de [`DeathStatsService`](../src/main/java/com/cristian/betterdeathmessages/service/DeathStatsService.java), que se hidrata desde `deaths.json` al activarse.
+- Los placeholders se leen desde el `ConcurrentHashMap` en memoria de [`DeathStatsService`](../src/main/java/com/ttsstudio/betterdeathmessages/service/DeathStatsService.java), que se hidrata desde `deaths.json` al activarse.
 - Los placeholders devuelven una cadena vacía para jugadores `null`. Para claves desconocidas, devuelven `null` (la señal de PAPI para renderizar el placeholder literal).
 
 > 💡 **Consejo:** Combina `%bdm_kdr%` con plugins de placeholders condicionales (p. ej., la expansión `javascript` de PlaceholderAPI) para otorgar títulos como "Veterano" con un KDR ≥ 2.0.
