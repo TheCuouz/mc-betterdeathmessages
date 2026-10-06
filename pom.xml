@@ -4,9 +4,9 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.cristian</groupId>
+    <groupId>com.ttsstudio</groupId>
     <artifactId>betterdeathmessages</artifactId>
-    <version>1.2.3</version>
+    <version>1.2.4</version>
     <packaging>jar</packaging>
 
     <properties>
@@ -113,15 +113,15 @@
                             <relocations>
                                 <relocation>
                                     <pattern>org.bstats</pattern>
-                                    <shadedPattern>com.cristian.betterdeathmessages.libs.bstats</shadedPattern>
+                                    <shadedPattern>com.ttsstudio.betterdeathmessages.libs.bstats</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>com.ttsstudio.sdk</pattern>
-                                    <shadedPattern>com.cristian.${project.artifactId}.libs.ttssdk</shadedPattern>
+                                    <shadedPattern>com.ttsstudio.${project.artifactId}.libs.ttssdk</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>net.kyori</pattern>
-                                    <shadedPattern>com.cristian.${project.artifactId}.libs.kyori</shadedPattern>
+                                    <shadedPattern>com.ttsstudio.${project.artifactId}.libs.kyori</shadedPattern>
                                 </relocation>
                             </relocations>
                             <artifactSet>

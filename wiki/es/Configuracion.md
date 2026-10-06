@@ -46,7 +46,7 @@ El plugin resuelve automáticamente cada muerte en una de estas categorías y lu
 | `mob.DEFAULT` | Fallback para cualquier mob sin lista específica | `messages.mob.DEFAULT` |
 | `unknown` | Cualquier otra cosa (daño personalizado, sofocación, etc.) | `messages.unknown` |
 
-> 📝 **Nota:** La resolución de categorías vive en [`DeathCategoryResolver.java`](../src/main/java/com/cristian/betterdeathmessages/message/DeathCategoryResolver.java). El PvP tiene prioridad sobre los kills de mob; los kills de mob tienen prioridad sobre las causas ambientales.
+> 📝 **Nota:** La resolución de categorías vive en [`DeathCategoryResolver.java`](../src/main/java/com/ttsstudio/betterdeathmessages/message/DeathCategoryResolver.java). El PvP tiene prioridad sobre los kills de mob; los kills de mob tienen prioridad sobre las causas ambientales.
 
 ---
 
