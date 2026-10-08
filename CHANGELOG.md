@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.3.0] — 2026-10-08
+
+### Added
+- **Runs on Folia.** Every task now goes through the TTS-Studio scheduler: on Paper and Spigot nothing changes, and on Folia (`folia-supported: true`) each piece of work runs on the region that owns what it touches. Tested on Folia 1.21.11.
+
 ## [1.2.3] — 2026-10-05
 
 ### Security
@@ -91,7 +96,6 @@
 
 ---
 
-
 All notable changes to BetterDeathMessages are documented here.
 
 ## [1.1.2] — 2026-08-26
@@ -99,7 +103,6 @@ All notable changes to BetterDeathMessages are documented here.
 ### Changed
 - **Default interface language is English** (`language: en`), and every `config.yml` comment is
   now in English. The build published on BuiltByBit was still shipping the Spanish default.
-
 
 ## [1.1.0] - 2026-05-14
 
