@@ -14,7 +14,7 @@ This page walks you through getting **BetterDeathMessages** running on your Pape
 | Java | **16+** | ✅ Yes |
 | [PlaceholderAPI](https://www.spigotmc.org/resources/placeholderapi.6245/) | 2.11.6+ | ⚡ Optional |
 
-> ⚠️ **Warning:** Folia is **not** supported. Minecraft 1.16 and older are not supported either: the plugin refuses to load there.
+> ℹ️ Runs on Paper, Spigot and Folia. Minecraft 1.16 and older are not supported: the plugin refuses to load there.
 
 ---
 

@@ -73,8 +73,8 @@ public final class BetterDeathMessagesPlugin extends JavaPlugin {
         if (configManager.lastWordsEnabled()) {
             Chat.onPublicMessage(this, new ChatCaptureListener(lastWordsCache));
             // Periodic janitor: drop expired entries every minute.
-            getServer().getScheduler().runTaskTimer(
-                this, lastWordsCache::purgeExpired, 20L * 60L, 20L * 60L);
+            com.ttsstudio.sdk.scheduler.Scheduler.asyncTimer(
+                this, t -> lastWordsCache.purgeExpired(), 20L * 60L, 20L * 60L);
         }
 
         var deathsCmd = getCommand("deaths");

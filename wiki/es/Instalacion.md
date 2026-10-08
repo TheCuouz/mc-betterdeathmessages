@@ -14,7 +14,7 @@ Esta página te guía paso a paso para poner **BetterDeathMessages** en funciona
 | Java | **16+** | ✅ Sí |
 | [PlaceholderAPI](https://www.spigotmc.org/resources/placeholderapi.6245/) | 2.11.6+ | ⚡ Opcional |
 
-> ⚠️ **Advertencia:** Folia **no** está soportado. Tampoco la 1.16 ni anteriores: ahí el plugin no carga.
+> ℹ️ Funciona en Paper, Spigot y Folia. La 1.16 y anteriores no están soportadas: ahí el plugin no carga.
 
 ---
 

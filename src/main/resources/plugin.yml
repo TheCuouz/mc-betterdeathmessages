@@ -23,3 +23,4 @@ permissions:
   bdm.admin:
     description: "Reload config"
     default: op
+folia-supported: true
