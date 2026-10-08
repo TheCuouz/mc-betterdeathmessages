@@ -177,7 +177,7 @@ public class DeathListener implements Listener {
                         .getString("kill-streak." + streakKey, "");
                     if (!rawTemplate.isEmpty()) {
                         String msg = rawTemplate.replace("{killer}", finalKiller.getName());
-                        Bukkit.getScheduler().runTask(plugin,
+                        com.ttsstudio.sdk.scheduler.Scheduler.global(plugin,
                             () -> Texts.broadcast(MM.deserialize(msg)));
                     }
                 }
@@ -191,7 +191,7 @@ public class DeathListener implements Listener {
                         String msg = raw
                             .replace("{killer}", finalKiller.getName())
                             .replace("{victim}", victimName);
-                        Bukkit.getScheduler().runTask(plugin,
+                        com.ttsstudio.sdk.scheduler.Scheduler.global(plugin,
                             () -> Texts.broadcast(MM.deserialize(msg)));
                     }
                 }
